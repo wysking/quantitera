@@ -86,3 +86,21 @@ def test_external_and_local_market_inputs_keep_their_own_provenance(tmp_path):
     bundle = load_bundle(tmp_path, CLOCK)
     assert bundle["histories"]["alpha"]["input_path"] == "external:synthetic-prices"
     assert bundle["histories"]["beta"]["input_path"] == "inputs/market.json"
+
+
+@pytest.mark.parametrize("checkout_crlf", ["true", "false"])
+def test_request_receipt_replays_after_cross_platform_git_clone(tmp_path, checkout_crlf):
+    import subprocess
+    root, clone = tmp_path / "source", tmp_path / "clone"
+    initialize(root)
+    request = root / "inbox/synthetic-portable.json"
+    write_json(request, {"version": 1, "operation": "save_decision", "inputs": {
+        "reference": "synthetic-portable", "asset": "alpha", "conclusion": "SYNTHETIC Unicode 跨平台"}})
+    receipt = process_one(root, request, CLOCK)
+    assert receipt["status"] == "succeeded"
+    assert b"\r\n" not in request.read_bytes()
+    for args in (["init"], ["config", "core.autocrlf", "true"], ["config", "user.name", "synthetic-test"],
+                 ["config", "user.email", "test@example.org"], ["add", "."], ["commit", "-m", "Synthetic workspace"]):
+        subprocess.run(["git", *args], cwd=root, capture_output=True, check=True)
+    subprocess.run(["git", "-c", f"core.autocrlf={checkout_crlf}", "clone", str(root), str(clone)], capture_output=True, check=True)
+    assert process_one(clone, clone / request.relative_to(root), CLOCK) == receipt

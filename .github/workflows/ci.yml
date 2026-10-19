@@ -26,6 +26,7 @@ jobs:
           "$engine_python" -I -m research_engine init --workspace workspace-smoke
           cd workspace-smoke
           test -f .github/workflows/research.yml
+          test -f .gitattributes
           git init -b main
           git config user.name 'quantitera-test'
           git config user.email 'quantitera-test@users.noreply.github.com'

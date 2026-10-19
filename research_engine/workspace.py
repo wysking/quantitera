@@ -14,7 +14,7 @@ def write_json(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(value, ensure_ascii=False, indent=2, default=str, allow_nan=False) + "\n"
     temp = path.with_suffix(".tmp")
-    temp.write_text(text, encoding="utf-8")
+    temp.write_text(text, encoding="utf-8", newline="\n")
     temp.replace(path)
 
 
