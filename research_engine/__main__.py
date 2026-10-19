@@ -22,11 +22,14 @@ def initialize(root):
 
 def discussion(root, asset, clock):
     apply_operation(root, {"operation": "status"}, clock)
-    state = read_json(root / "exports/current_state.json")["assets"].get(asset, {})
+    states = read_json(root / "exports/current_state.json")["assets"]
+    state = states.get(asset, {})
     mechanisms = read_json(root / "exports/mechanisms.json")["assets"].get(asset, {})
-    return {"asset": asset, "current_research": state, "economic_research": mechanisms,
+    return {"asset": asset, "current_research": state,
+            "global_research": states.get("all", {}) if asset != "all" else {},
+            "economic_research": mechanisms,
             "research_instructions": [
-                "Read recent completed reviews and unresolved evidence before making a new judgement.",
+                "Read asset and global_research completed reviews and unresolved evidence before making a new judgement.",
                 "Explain supported/refuted parts, errors, evidence gaps, surviving mechanisms and new hypotheses.",
                 "Compare prior expectations, source timestamps, horizons, counter-evidence and competing explanations.",
                 "Save the resulting judgement with review_at and explicit review_spec; do not infer personal trades.",

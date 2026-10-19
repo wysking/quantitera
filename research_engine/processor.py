@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timedelta
+from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
@@ -98,9 +98,11 @@ def process_one(root: Path, path: Path, clock: datetime) -> dict:
 def process_pending(root: Path, clock: datetime | None = None) -> list[dict]:
     clock = clock or now()
     receipts = []
-    for index, path in enumerate(sorted((root / "inbox").glob("*.json"))):
+    for path in sorted((root / "inbox").glob("*.json")):
         try:
-            receipts.append(process_one(root, path, clock + timedelta(microseconds=index)))
+            # One refresh has one knowledge cutoff. Artificial future timestamps
+            # hide later accepted requests when the CLI exports at that cutoff.
+            receipts.append(process_one(root, path, clock))
         except RequestFileError as exc:
             # Preserve any prior success receipt. Never read through symlinks,
             # and do not swallow disk/ledger integrity failures as file errors.
@@ -110,7 +112,7 @@ def process_pending(root: Path, clock: datetime | None = None) -> list[dict]:
             receipt = read_json(root / relative)
             if not receipt:
                 receipt = {"request_id": path.stem, "request_sha256": exc.digest,
-                    "processed_at": (clock + timedelta(microseconds=index)).isoformat(),
+                    "processed_at": clock.isoformat(),
                     "status": "rejected", "operation": None, "error": str(exc),
                     "error_path": relative}
                 write_json(root / relative, receipt)

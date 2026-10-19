@@ -3,6 +3,8 @@
 本文件属于私有工作空间。不要把个人数据发到公开引擎仓库。
 
 1. 先读取exports/manifest.json和exports/current_state.json。讨论资产时必须读取该资产及相关all条目的review_feedback；按需读其detail_path。不得只看最新观点而忽略历史反驳。
+
+   使用discuss命令时，current_research对应资产，global_research对应all通用经验；新资产也应读取global_research。
 2. 再读exports/mechanisms.json的对应资产：研究假说、期限、原始证据、事前预期、反证、竞争解释、证伪条件与下一观察。来源引用不等于本次已经独立下载核实；预期差不等于因果，价格走势不能代替事前预期。
 3. 下一轮研究明确说明得到支持/反驳的部分、错误与证据缺口、仍适用机制及需继续检验的新假设。复杂经济判断由ChatGPT研究；程序只做有明确条件和成熟数据的对照。
 4. 保存判断使用inbox/<唯一编号>.json。格式：{"version":1,"operation":"save_decision","inputs":{...}}。inputs值用字符串，reference/asset/conclusion为基本字段，建议同时提供facts、invalidation、review_at、review_spec；多资产用assets JSON数组字符串。新的判断用supersedes连接被替代判断。

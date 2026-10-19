@@ -209,10 +209,16 @@ def feedback_for(asset, reviews, decisions):
     """Always included in the normal current_state entry, even for old assets."""
     by_id = {d["id"]: d for d in decisions}
     latest = {}
-    for event in sorted(reviews, key=lambda e: (e.get("recorded_at", ""), e["id"])):
+    for event in sorted(reviews, key=lambda e: (datetime.fromisoformat(e["recorded_at"]), e["id"])):
+        previous = latest.get(event["review_id"])
+        # Queue closure is terminal. A gap snapshot with the same cutoff must
+        # not hide the completed result merely because its hash sorts later.
+        if (previous and previous.get("status", "reviewed") == "reviewed"
+                and event.get("status") == "awaiting_evaluation"):
+            continue
         latest[event["review_id"]] = event
     result = {"recent_completed": [], "awaiting_evaluation": [], "detail_path": "exports/reviews.json"}
-    for event in sorted(latest.values(), key=lambda e: (e.get("recorded_at", ""), e["id"]), reverse=True):
+    for event in sorted(latest.values(), key=lambda e: (datetime.fromisoformat(e["recorded_at"]), e["id"]), reverse=True):
         decision = by_id.get(event.get("decision_id") or event["review_id"], {})
         assets = event.get("assets") or decision.get("assets", [])
         if asset not in assets and "all" not in assets:

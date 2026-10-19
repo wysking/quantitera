@@ -156,7 +156,7 @@ def build_knowledge_views(root: Path, all_events: Iterable[dict], generated_at: 
             item["status"] = "superseded"
 
     reviews = sorted((e for e in all_events if e.get("type") == "review_completion"),
-                     key=lambda e: (e.get("recorded_at", ""), e["id"]))
+                     key=lambda e: (datetime.fromisoformat(e["recorded_at"]), e["id"]))
     for item in decisions:
         related_reviews = [e for e in reviews if (e.get("decision_id") or e["review_id"]) == item["id"]]
         if related_reviews:
