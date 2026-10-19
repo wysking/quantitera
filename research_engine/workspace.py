@@ -14,7 +14,7 @@ def write_json(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(value, ensure_ascii=False, indent=2, default=str, allow_nan=False) + "\n"
     temp = path.with_suffix(".tmp")
-    temp.write_text(text, encoding="utf-8")
+    temp.write_text(text, encoding="utf-8", newline="\n")
     temp.replace(path)
 
 
@@ -154,8 +154,14 @@ def classify_decision(root: Path, inputs: dict, clock: datetime) -> dict:
 
 def context(root, clock):
     from research_engine.calendar import aware
+    from research_engine.integration import history
     aware(clock)
-    known = [e for e in events(root) if datetime.fromisoformat(e["recorded_at"]) <= clock]
+    combined = {}
+    for event in [*history(root, clock), *events(root)]:
+        if event["id"] in combined and combined[event["id"]] != event:
+            raise ValueError("workspace/provider event identity collision")
+        combined[event["id"]] = event
+    known = [e for e in combined.values() if datetime.fromisoformat(e["recorded_at"]) <= clock]
     return build_knowledge_views(root, known, clock.isoformat())
 
 
@@ -177,4 +183,6 @@ def apply_operation(root, inputs, clock, record_id=None):
     context(root, clock)
     from research_engine.mechanisms import export
     export(root, clock)
+    from research_engine.integration import export as export_workspace
+    export_workspace(root, clock)
     return result

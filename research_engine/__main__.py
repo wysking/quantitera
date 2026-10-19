@@ -28,17 +28,19 @@ def discussion(root, asset, clock):
     return {"asset": asset, "current_research": state,
             "global_research": states.get("all", {}) if asset != "all" else {},
             "economic_research": mechanisms,
+            "workspace_research": read_json(root / "exports/workspace.json", {}).get("assets", {}).get(asset, {}),
             "research_instructions": [
                 "Read asset and global_research completed reviews and unresolved evidence before making a new judgement.",
                 "Explain supported/refuted parts, errors, evidence gaps, surviving mechanisms and new hypotheses.",
                 "Compare prior expectations, source timestamps, horizons, counter-evidence and competing explanations.",
+                "Check workspace model/data timestamps and missing capabilities; proxies are not account returns.",
                 "Save the resulting judgement with review_at and explicit review_spec; do not infer personal trades.",
             ], "execution_allowed": False}
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="quantitera")
-    parser.add_argument("command", choices=("init", "refresh", "process", "status", "discuss"))
+    parser.add_argument("command", choices=("init", "refresh", "process", "status", "discuss", "workspace", "model", "portfolio"))
     parser.add_argument("--workspace", type=Path, required=True)
     parser.add_argument("--asset")
     parser.add_argument("--as-of", help="Timezone-aware clock, for reproducible research/tests")
@@ -61,6 +63,14 @@ def main(argv=None):
             if not args.asset:
                 parser.error("discuss requires --asset")
             result = discussion(root, args.asset, clock)
+        elif args.command in {"workspace", "model", "portfolio"}:
+            from research_engine import integration
+            apply_operation(root, {"operation": "status"}, clock)
+            if args.command == "model" and not args.asset:
+                parser.error("model requires --asset")
+            result = (integration.model(root, args.asset, clock) if args.command == "model" else
+                      integration.portfolio(root, clock) if args.command == "portfolio" else
+                      integration.export(root, clock))
         else:
             apply_operation(root, {"operation": "status"}, clock)
             result = {"state_path": "exports/current_state.json", "execution_allowed": False}

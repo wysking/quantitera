@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "quantitera"
-version = "0.1.2"
+version = "0.2.1"
 description = "Economic mechanism research, due validation and knowledge feedback"
 requires-python = ">=3.12"
 license = "MIT"
@@ -20,7 +20,7 @@ quantitera = "research_engine.__main__:main"
 include = ["research_engine*"]
 
 [tool.setuptools.package-data]
-research_engine = ["*.json", "workspace_template/**/*", "workspace_template/.gitignore", "workspace_template/.github/workflows/*.yml"]
+research_engine = ["*.json", "workspace_template/**/*", "workspace_template/.gitignore", "workspace_template/.gitattributes", "workspace_template/.github/workflows/*.yml"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
