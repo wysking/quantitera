@@ -91,9 +91,17 @@ def export(root, clock):
                               d["invalidation"], d["next_observation"])
                        for name, d in config.get("mechanisms", {}).get(asset, {}).items()}
         cards = mechanism_cards(selected, definitions)
+        for card in cards:
+            sources = [r for r in selected if r.get("mechanism_id") == card["mechanism_id"]
+                       and r["horizon"] == card["horizon"] and r["status"] == "available"]
+            # Retain the P3 source-provided objections alongside configured hypotheses.
+            card["provided_counter_text"] = [text for r in sources for text in r.get("counter_evidence", [])]
+            card["alternative_explanations"] = list(dict.fromkeys([
+                *card["alternative_explanations"],
+                *(text for r in sources for text in r.get("alternative_explanations", []))]))
         prior = compare(selected)
         technical = {"status": "not_supplied", "direction": None}
-        reports[asset] = {"economic_mechanisms": cards, "expectations": prior,
+        reports[asset] = {"economic_mechanisms": cards, "evidence": selected, "expectations": prior,
                           "conflicts": diagnose(selected, cards, technical, prior, []),
                           "review_feedback": load_feedback(root, asset),
                           "causal_status": "not_identified", "execution_allowed": False}

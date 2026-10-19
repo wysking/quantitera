@@ -66,12 +66,16 @@ def test_economic_mechanisms_prior_comparison_and_counter_evidence_reach_discuss
         record(tmp_path, {"reference": "synthetic-"+role, "evidence": json.dumps(evidence("mechanism_evidence",
             asset="demo", mechanism_id="demo-transmission", evidence_role=role,
             fact_id="synthetic-fact-"+role, metric="synthetic-cost" if value > 0 else "synthetic-demand",
-            value=value))}, CLOCK)
+            value=value, counter_evidence=["SYNTHETIC source objection"],
+            alternative_explanations=["SYNTHETIC source alternative"]))}, CLOCK)
     end = event_and_prior(tmp_path, value=3.25)
     packet = discussion(tmp_path, "demo", end)
     card = packet["economic_research"]["economic_mechanisms"][0]
     assert card["supporting_evidence"] and card["counter_evidence"] and card["alternative_explanations"]
     assert card["causal_status"] == "hypothesis_not_identified" and card["forecast"] is None
+    assert "SYNTHETIC source objection" in card["provided_counter_text"]
+    assert "SYNTHETIC source alternative" in card["alternative_explanations"]
+    assert packet["economic_research"]["evidence"][0]["source_excerpt"]
     priors = discussion(tmp_path, "gold", end)["economic_research"]["expectations"]
     assert priors["events"][0]["surprise"] == .25 and priors["probability_up"] is None
     assert packet["execution_allowed"] is False
