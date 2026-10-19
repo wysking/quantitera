@@ -1,0 +1,102 @@
+{
+  "origin": "Existing V6 evidence research and V7 P1 review cycle",
+  "reuse": [
+    {
+      "source_file": "mobile/research/calendar.py",
+      "source_sha256": "d4adc270d743ebcd3a25f06a86a4f29423328d0b193bf766984b194b47a8cdd2"
+    },
+    {
+      "source_file": "mobile/research/cash_history_2021_2024.json",
+      "source_sha256": "a9a328a4b00b090ed5d813fe4c882dc30e7704a5e4f76daf0b7cd620017be146"
+    },
+    {
+      "source_file": "mobile/reviews.py",
+      "source_sha256": "96b3d36a575e4da77f1ea9b5a270b1ccb5cb3f161413ec766d251466d2f16603"
+    },
+    {
+      "source_file": "mobile/research/data.py",
+      "source_functions": [
+        "price_session",
+        "price_sessions",
+        "latest_price_session",
+        "digest",
+        "positive",
+        "_bar",
+        "history_view"
+      ],
+      "source_functions_sha256": "1b05769485cf646ba0e1c37ebb0022074663a26521d6be311a5560453a8e1f9c"
+    },
+    {
+      "source_file": "mobile/cloud.py",
+      "source_functions": [
+        "now",
+        "write_json",
+        "read_json",
+        "identifier",
+        "events",
+        "append_event",
+        "save_decision",
+        "evidence_refs",
+        "record_review",
+        "classify_decision"
+      ],
+      "source_functions_sha256": "c128955720d52e33fc01ad08b305e862ba7e816988d0a9c9d5255a321435663f"
+    },
+    {
+      "source_file": "mobile/research/v6/expectations.py",
+      "source_sha256": "960870592dbb3fd47283d70775d4cdd9e3c11e56ea608339caf1c003b0603c4b"
+    },
+    {
+      "source_file": "mobile/research/v6/gold.py",
+      "source_functions": [
+        "mechanism_cards"
+      ],
+      "source_functions_sha256": "b32d7af3c2b8902a27ca5aa3a9abfecf0fdb25b9c9a243167f8e5f6d62397619"
+    },
+    {
+      "source_file": "mobile/knowledge.py",
+      "source_sha256": "19edf084a2045180d315c5ea089f11ff682bc86e557c1ea62c1df6cab9355f4d",
+      "adapted": true
+    },
+    {
+      "source_file": "mobile/review_cycle.py",
+      "source_sha256": "2ec61aded8c5dc65c9bfd62fa5ea60d4a5a688a37c7685658964aaff1dd3f278",
+      "adapted": true
+    },
+    {
+      "source_file": "mobile/processor.py",
+      "source_sha256": "d8eccc50ff3888b9a005b8f781a52066155f771558ede159f7328d6cc431aafd",
+      "adapted": true
+    },
+    {
+      "source_file": "mobile/research/identity.py",
+      "source_sha256": "88ad8ba313fc7379de6160a8735ab1f8b5513afb6bc12a10f9dcf1dda641f524",
+      "adapted": true
+    },
+    {
+      "source_file": "mobile/research/v6/evidence.py",
+      "source_sha256": "15829b1b17af0155a8aa8f8b38bf5171587cd3df6440c067be6b41327fefe522",
+      "adapted": true
+    },
+    {
+      "source_file": "mobile/research/v6/conflicts.py",
+      "source_sha256": "11802923e7edefe8fcb5cb36f35e7f5674d4b9f8a2ea2c2c13a94f4c47b5a59d",
+      "adapted": true
+    }
+  ],
+  "adaptations": [
+    "Python import paths",
+    "account-free storage boundary",
+    "explicit workspace subjects",
+    "user-supplied mechanism definitions",
+    "removed private legacy/model/provider adapters"
+  ],
+  "excluded": [
+    "private git history",
+    "personal observations",
+    "holdings",
+    "trades",
+    "strategy/model definitions and weights",
+    "real-case fixtures"
+  ]
+}
