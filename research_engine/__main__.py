@@ -21,7 +21,7 @@ def initialize(root):
 
 
 def discussion(root, asset, clock):
-    apply_operation(root, {"operation": "status"}, clock)
+    apply_operation(root, {"operation": "research_refresh"}, clock)
     states = read_json(root / "exports/current_state.json")["assets"]
     state = states.get(asset, {})
     mechanisms = read_json(root / "exports/mechanisms.json")["assets"].get(asset, {})
@@ -35,6 +35,7 @@ def discussion(root, asset, clock):
                 "Compare prior expectations, source timestamps, horizons, counter-evidence and competing explanations.",
                 "Check workspace model/data timestamps and missing capabilities; proxies are not account returns.",
                 "Save the resulting judgement with review_at and explicit review_spec; do not infer personal trades.",
+                "Register new testable mechanisms through the configured candidate-factor pipeline; price outcomes do not identify causes.",
             ], "execution_allowed": False}
 
 

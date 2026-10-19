@@ -23,9 +23,19 @@ def provide(root, clock, operation, **kwargs):
                      for day, value in (("2026-10-01", 100), ("2026-10-02", 101), ("2026-10-05", 102))]}}}
     if operation == "asset_model":
         asset = kwargs["asset"]
-        return {"status": "not_registered" if asset == "unmodeled" else "available", "value": {"alpha": 2, "beta": 3}.get(asset)}
+        return {"status": "not_registered" if asset == "unmodeled" else "available", "value": {"alpha": 2, "beta": 3}.get(asset),
+                "feedback_seen": kwargs["research_context"]}
     if operation == "portfolio_model":
         assets = kwargs["assets"]
         return {"status": "available", "assets_seen": sorted(assets),
-                "value": sum(model["value"] for model in assets.values() if model["value"] is not None)}
+                "value": sum(model["value"] for model in assets.values() if model["value"] is not None),
+                "feedback_seen": kwargs["research_context"]}
+    if operation == "review_evidence":
+        return {"evidence_gaps": ["SYNTHETIC causal evidence missing"],
+                "competing_explanations": ["SYNTHETIC competing channel"], "source_refs": ["external:synthetic-evidence"]}
+    if operation == "factor_candidates":
+        values = kwargs["candidates"]
+        if any(value.get("candidate_id") != "synthetic-candidate" for value in values):
+            raise ValueError("SYNTHETIC invalid candidate")
+        return values
     raise ValueError(operation)

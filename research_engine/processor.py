@@ -15,7 +15,7 @@ from research_engine.workspace import apply_operation, now, read_json, write_jso
 OPERATIONS = {"save_decision", "record_review", "classify_decision", "record_evidence", "research_refresh", "status"}
 FIELDS = {"reference", "asset", "note", "assets", "subjects", "topics", "aliases", "horizon", "status", "confidence", "question",
           "facts", "user_hypotheses", "model_inference", "conclusion", "invalidation", "review_at", "supersedes", "related_ids",
-          "source_refs", "review_id", "target_id", "record_kind", "review_spec", "review_result", "evidence"}
+          "source_refs", "review_id", "target_id", "record_kind", "review_spec", "review_result", "evidence", "factor_candidates"}
 
 
 class RequestFileError(ValueError):
@@ -46,6 +46,8 @@ def validate_request(payload: object) -> dict:
     for field, operation in (("review_spec", "save_decision"), ("review_result", "record_review"), ("evidence", "record_evidence")):
         if field in inputs and op != operation:
             raise ValueError(f"{field} only supports {operation}")
+    if "factor_candidates" in inputs and op not in {"save_decision", "record_review"}:
+        raise ValueError("factor_candidates only supports judgements and reviews")
     return dict(inputs, operation=op)
 
 
