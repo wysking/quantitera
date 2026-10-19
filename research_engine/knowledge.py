@@ -111,7 +111,7 @@ def normalize_decision(event: dict) -> dict:
     }
     if event.get("review_spec"):
         result["review_spec"] = event["review_spec"]
-    for field in ("source_kind", "origin", "legacy_record"):
+    for field in ("source_kind", "origin", "legacy_record", "factor_candidates"):
         if field in event:
             result[field] = event[field]
     if result["status"] not in VALID_STATUSES:

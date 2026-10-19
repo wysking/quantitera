@@ -83,7 +83,24 @@ def save_decision(root: Path, inputs: dict, clock: datetime) -> dict:
         if not event["review_at"]:
             raise ValueError("登记验证条件必须填写review_at")
         event["review_spec"] = review_spec
+    candidates = factor_candidates(root, inputs, clock, event)
+    if candidates:
+        event["factor_candidates"] = candidates
     return append_event(root, event, clock)
+
+
+def factor_candidates(root, inputs, clock, event):
+    """The workspace's existing factor system owns definition and eligibility."""
+    if not inputs.get("factor_candidates"):
+        return []
+    from research_engine.integration import optional
+    candidates = json.loads(inputs["factor_candidates"])
+    if not isinstance(candidates, list) or len(candidates) > 10:
+        raise ValueError("factor_candidates must be an array with at most 10 entries")
+    result = optional(root, clock, "factor_candidates", candidates=candidates, event=event)
+    if not isinstance(result, list):
+        raise ValueError("workspace has no configured candidate-factor pipeline")
+    return result
 
 
 def evidence_refs(value: str) -> list[str]:
@@ -117,7 +134,10 @@ def record_review(root: Path, inputs: dict, clock: datetime) -> dict:
         event["learning"] = learning
     previous = read_json(root / "data/events" / f"{key}.json")
     if previous:
-        if any(previous.get(k) != v for k, v in event.items()):
+        candidates = factor_candidates(root, inputs, clock, previous)
+        if candidates:
+            event["factor_candidates"] = candidates
+        if any(previous.get(k) != v for k, v in event.items()) or previous.get("factor_candidates", []) != candidates:
             raise ValueError("编号已存在但内容不同；不会覆盖原记录")
         return previous
     target = next((item for item in context(root, clock)["review_queue"] if item["id"] == review_id), None)
@@ -128,6 +148,9 @@ def record_review(root: Path, inputs: dict, clock: datetime) -> dict:
     event.update(review_metadata(root, target))
     if not event["original"]:
         raise ValueError("找不到原始判断，不能完成复盘")
+    candidates = factor_candidates(root, inputs, clock, event)
+    if candidates:
+        event["factor_candidates"] = candidates
     return append_event(root, event, clock)
 
 
