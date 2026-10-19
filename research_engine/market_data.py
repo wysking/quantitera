@@ -93,8 +93,17 @@ def history_view(history, clock, min_observations=61):
 
 def load_bundle(root, clock):
     from research_engine.workspace import read_json
+    from research_engine.integration import call
     bundle = read_json(root / "inputs/market.json", {"histories": {}})
+    external = call(root, clock, "market_data")
+    if external is not None:
+        histories = {key: {**value, "input_path": value.get("input_path") or external.get("record_path")}
+                     for key, value in external.get("histories", {}).items()}
+        histories.update({key: {**value, "input_path": value.get("input_path") or "inputs/market.json"}
+                          for key, value in bundle.get("histories", {}).items()})
+        bundle = {**external, **bundle,
+                  "histories": histories}
     generated = bundle.get("generated_at")
     if generated and calendar.aware(datetime.fromisoformat(generated)) > clock:
         raise ValueError("market input is newer than the research clock")
-    return {**bundle, "record_path": "inputs/market.json"}
+    return {**bundle, "record_path": bundle.get("record_path") or "inputs/market.json"}
