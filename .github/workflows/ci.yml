@@ -37,4 +37,7 @@ jobs:
           "$engine_python" -I -m research_engine refresh --workspace .
           git add data/events exports outbox
           test -f exports/current_state.json
+          test -f exports/research_performance.md
+          test -f exports/live_portfolio_performance.json
+          test -f exports/shareable/live_portfolio_performance.md
           "$engine_python" -I -m research_engine discuss --workspace . --asset demo

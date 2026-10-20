@@ -213,9 +213,8 @@ def advance_reviews(root, clock, bundle=None):
             "event_ids": [e["id"] for e in added]}
 
 
-def feedback_for(asset, reviews, decisions):
-    """Always included in the normal current_state entry, even for old assets."""
-    by_id = {d["id"]: d for d in decisions}
+def latest_reviews(reviews):
+    """A completed window remains terminal even if a later gap snapshot exists."""
     latest = {}
     for event in sorted(reviews, key=lambda e: (datetime.fromisoformat(e["recorded_at"]), e["id"])):
         previous = latest.get(event["review_id"])
@@ -225,6 +224,13 @@ def feedback_for(asset, reviews, decisions):
                 and event.get("status") == "awaiting_evaluation"):
             continue
         latest[event["review_id"]] = event
+    return latest
+
+
+def feedback_for(asset, reviews, decisions):
+    """Always included in the normal current_state entry, even for old assets."""
+    by_id = {d["id"]: d for d in decisions}
+    latest = latest_reviews(reviews)
     result = {"recent_completed": [], "awaiting_evaluation": [], "forward_observations": [], "detail_path": "exports/reviews.json"}
     for event in sorted(latest.values(), key=lambda e: (datetime.fromisoformat(e["recorded_at"]), e["id"]), reverse=True):
         decision = by_id.get(event.get("decision_id") or event["review_id"], {})

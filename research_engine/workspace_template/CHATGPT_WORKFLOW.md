@@ -13,3 +13,4 @@
 7. review_queue中的due是新到期，awaiting_evaluation已有证据但仍待评价。完成复杂评价仍用record_review，status为reviewed或awaiting_evaluation，facts/conclusion/source_refs必须齐全。review_result JSON字符串包括supported/refuted/errors/evidence_gaps/mechanisms/next_hypotheses/competing_explanations字符串数组。无法确定时列明缺口并保留awaiting_evaluation。
 8. 核对outbox同编号status=succeeded，再读current_state/review_queue确认反馈与任务状态。提交成功不等于处理完成。引擎不推断成交、不改变投资策略、不授予交易权限。
 9. 使用私人模型时核对输入research_context和manifest.model_feedback_matches_workspace。新可检验机制通过私人已有候选系统登记；启用factor_candidates能力后，可在save_decision或record_review中附同名JSON数组字符串。只有原系统登记回执和验证结果才代表进入候选流程，普通来源数量、价格涨跌或待检验假设不授予权重。
+10. refresh 自动更新 exports/research_performance 和 live_portfolio_performance 的 JSON / Markdown；也可单独执行 performance。研究统计不把政策、工作流、未知分类或代理窗口当成判断命中率；实盘统计不把持仓盈亏、回测和模拟当成累计收益。可选资金流、费用、汇率和基准事实按 docs/performance.md 放在 inputs/live_performance.json，不覆盖原账户快照。config/performance.json 选择分享范围，exports/shareable 仅是本工作空间内的可选摘要，不自动发布到公开仓库。

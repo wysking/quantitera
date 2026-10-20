@@ -41,7 +41,7 @@ def discussion(root, asset, clock):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="quantitera")
-    parser.add_argument("command", choices=("init", "refresh", "process", "status", "discuss", "workspace", "model", "portfolio"))
+    parser.add_argument("command", choices=("init", "refresh", "process", "status", "discuss", "workspace", "model", "portfolio", "performance"))
     parser.add_argument("--workspace", type=Path, required=True)
     parser.add_argument("--asset")
     parser.add_argument("--as-of", help="Timezone-aware clock, for reproducible research/tests")
@@ -60,6 +60,12 @@ def main(argv=None):
             receipts = process_pending(root, clock)
             result = apply_operation(root, {"operation": "research_refresh" if args.command == "refresh" else "status"}, clock)
             result = {"requests_checked": len(receipts), "review_cycle": result, "execution_allowed": False}
+            if args.command == "refresh":
+                from research_engine.performance import export
+                result["performance_reports"] = export(root, clock)
+        elif args.command == "performance":
+            from research_engine.performance import export
+            result = export(root, clock)
         elif args.command == "discuss":
             if not args.asset:
                 parser.error("discuss requires --asset")

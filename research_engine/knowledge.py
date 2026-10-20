@@ -247,6 +247,9 @@ def build_knowledge_views(root: Path, all_events: Iterable[dict], generated_at: 
             "details": "exports/knowledge/<decision_id>.json",
             "reviews": "exports/reviews.json",
             "mechanisms": "exports/mechanisms.json",
+            "research_performance": "exports/research_performance.json",
+            "live_portfolio_performance": "exports/live_portfolio_performance.json",
+            "shareable_performance": "exports/shareable/",
         },
     }
     payloads = {
