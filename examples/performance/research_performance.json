@@ -1,0 +1,230 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-06T12:00:00+08:00",
+  "source": null,
+  "execution_allowed": false,
+  "example_only": true,
+  "category": "research_not_live_returns",
+  "period": {
+    "start": "2026-01-01",
+    "end": "2026-01-01"
+  },
+  "evidence_status": "not_configured",
+  "asset_labels": {},
+  "counts": {
+    "knowledge_records": 2,
+    "human_records": 2,
+    "unclassified_records": 0,
+    "workflow_and_account_records": 0,
+    "judgements": 2,
+    "due_or_reviewed_judgements": 2,
+    "known_deadline_due_judgements": 2,
+    "reviewed_judgements": 2,
+    "historical_deadlines_passed_including_retired": 2,
+    "unprocessed_due_judgements": 0,
+    "completed_review_tasks": 2,
+    "awaiting_review_tasks": 0,
+    "supported": 1,
+    "refuted": 1,
+    "mixed": 0,
+    "unscored_completed": 0,
+    "supported_parts_reviews": 1,
+    "refuted_parts_reviews": 1,
+    "documented_errors_reviews": 1,
+    "evidence_insufficient_reviews": 0,
+    "without_review_deadline": 0
+  },
+  "by_asset": {
+    "alpha": {
+      "judgements": 1,
+      "due_or_reviewed_judgements": 1,
+      "known_deadline_due_judgements": 1,
+      "reviewed_judgements": 1,
+      "historical_deadlines_passed_including_retired": 1,
+      "unprocessed_due_judgements": 0,
+      "completed_review_tasks": 1,
+      "awaiting_review_tasks": 0,
+      "supported": 1,
+      "refuted": 0,
+      "mixed": 0,
+      "unscored_completed": 0,
+      "supported_parts_reviews": 1,
+      "refuted_parts_reviews": 0,
+      "documented_errors_reviews": 0,
+      "evidence_insufficient_reviews": 0,
+      "without_review_deadline": 0
+    },
+    "beta": {
+      "judgements": 1,
+      "due_or_reviewed_judgements": 1,
+      "known_deadline_due_judgements": 1,
+      "reviewed_judgements": 1,
+      "historical_deadlines_passed_including_retired": 1,
+      "unprocessed_due_judgements": 0,
+      "completed_review_tasks": 1,
+      "awaiting_review_tasks": 0,
+      "supported": 0,
+      "refuted": 1,
+      "mixed": 0,
+      "unscored_completed": 0,
+      "supported_parts_reviews": 0,
+      "refuted_parts_reviews": 1,
+      "documented_errors_reviews": 1,
+      "evidence_insufficient_reviews": 0,
+      "without_review_deadline": 0
+    }
+  },
+  "policy_checks": {
+    "judgements": 0,
+    "due_or_reviewed_judgements": 0,
+    "known_deadline_due_judgements": 0,
+    "reviewed_judgements": 0,
+    "historical_deadlines_passed_including_retired": 0,
+    "unprocessed_due_judgements": 0,
+    "completed_review_tasks": 0,
+    "awaiting_review_tasks": 0,
+    "supported": 0,
+    "refuted": 0,
+    "mixed": 0,
+    "unscored_completed": 0,
+    "supported_parts_reviews": 0,
+    "refuted_parts_reviews": 0,
+    "documented_errors_reviews": 0,
+    "evidence_insufficient_reviews": 0,
+    "without_review_deadline": 0
+  },
+  "forward_observations": [],
+  "mechanisms": [],
+  "factors": [],
+  "historical_backtests": [],
+  "model_simulations": [],
+  "process_cohorts": [
+    {
+      "month": "2026-01",
+      "judgements": 2,
+      "due_or_reviewed_judgements": 2,
+      "known_deadline_due_judgements": 2,
+      "reviewed_judgements": 2,
+      "historical_deadlines_passed_including_retired": 2,
+      "unprocessed_due_judgements": 0,
+      "completed_review_tasks": 2,
+      "awaiting_review_tasks": 0,
+      "supported": 1,
+      "refuted": 1,
+      "mixed": 0,
+      "unscored_completed": 0,
+      "supported_parts_reviews": 1,
+      "refuted_parts_reviews": 1,
+      "documented_errors_reviews": 1,
+      "evidence_insufficient_reviews": 0,
+      "without_review_deadline": 0,
+      "explicit_review_specs": 2,
+      "dated_review_fraction": 1.0
+    }
+  ],
+  "method_improvement": {
+    "status": "not_established",
+    "reason": "Comparable asset, horizon, benchmark, costs, independent samples and uncertainty are required; version chronology or price gains do not prove improvement."
+  },
+  "definitions": [
+    "Only explicitly classified research records enter research-judgement counts; unclassified, policy and workflow records stay separate.",
+    "Completed tasks are counted once by review_id; one judgement may have multiple windows. A completed review can remain unscored.",
+    "Due-or-reviewed includes legacy completed reviews without a structured deadline. Supported/refuted counts require an explicit verdict, not prose inference.",
+    "Per-asset counts can overlap for multi-asset judgements and must not be summed into a total.",
+    "A legacy archive and its window view with the same original payload/source are one judgement; aliases remain traceable.",
+    "Forward means/positive frequencies describe proxy price episodes, not forecast hit rates, causal evidence or actual account returns. Windows may overlap."
+  ],
+  "representation_aliases": {},
+  "judgement_results": [
+    {
+      "id": "synthetic-alpha",
+      "assets": [
+        "alpha"
+      ],
+      "decision_date": "2026-01-01",
+      "status": "active",
+      "review_deadlines": [
+        "2026-01-06"
+      ],
+      "detail_path": "exports/knowledge/synthetic-alpha.json",
+      "reviews": [
+        {
+          "review_id": "synthetic-alpha",
+          "recorded_at": "2026-01-06T12:00:00+08:00",
+          "status": "reviewed",
+          "verdict": "supported",
+          "conclusion": "已完成登记的客观条件对照：supported。",
+          "learning": {
+            "supported": [
+              "仅此项观测条件满足：SYNTHETIC >=1%；close_return_pct=2.000000；不证明整体经济解释。"
+            ],
+            "refuted": [],
+            "errors": [],
+            "evidence_gaps": [],
+            "mechanisms": [],
+            "next_hypotheses": [],
+            "competing_explanations": []
+          },
+          "source_refs": [
+            "exports/knowledge/synthetic-alpha.json",
+            "inputs/market.json",
+            "https://example.com/synthetic-only"
+          ],
+          "detail_path": "data/events/auto-review-8f2bfba6c6ff68a6f16745f4d5d12487.json"
+        }
+      ]
+    },
+    {
+      "id": "synthetic-beta",
+      "assets": [
+        "beta"
+      ],
+      "decision_date": "2026-01-01",
+      "status": "active",
+      "review_deadlines": [
+        "2026-01-06"
+      ],
+      "detail_path": "exports/knowledge/synthetic-beta.json",
+      "reviews": [
+        {
+          "review_id": "synthetic-beta",
+          "recorded_at": "2026-01-06T12:00:00+08:00",
+          "status": "reviewed",
+          "verdict": "refuted",
+          "conclusion": "已完成登记的客观条件对照：refuted。",
+          "learning": {
+            "supported": [],
+            "refuted": [
+              "仅此项观测条件未满足：SYNTHETIC >=1%；close_return_pct=-2.000000；不证明整体经济解释。"
+            ],
+            "errors": [
+              "仅此项观测条件未满足：SYNTHETIC >=1%；close_return_pct=-2.000000；不证明整体经济解释。"
+            ],
+            "evidence_gaps": [],
+            "mechanisms": [],
+            "next_hypotheses": [
+              "用新记录和新的未来窗口检验修订解释；本窗口不重复作为独立样本。"
+            ],
+            "competing_explanations": []
+          },
+          "source_refs": [
+            "exports/knowledge/synthetic-beta.json",
+            "inputs/market.json",
+            "https://example.com/synthetic-only"
+          ],
+          "detail_path": "data/events/auto-review-eb840361a29e243f5e4606d5f9277dc6.json"
+        }
+      ]
+    }
+  ],
+  "mechanism_progress": {
+    "hypotheses": 0,
+    "causally_validated": 0,
+    "with_missing_evidence": 0
+  },
+  "factor_progress": {
+    "candidate_versions": 0,
+    "asset_version_research_qualified": 0,
+    "production_included": 0
+  }
+}

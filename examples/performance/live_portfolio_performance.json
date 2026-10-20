@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-01-06T12:00:00+08:00",
+  "source": null,
+  "execution_allowed": false,
+  "example_only": true,
+  "category": "actual_account",
+  "base_currency": "CNY",
+  "metrics": {
+    "investment_principal": {
+      "value": null,
+      "status": "missing_data",
+      "reason": "documented_invested_principal_since_inception_required"
+    },
+    "net_external_flows": {
+      "value": 300.0,
+      "status": "available",
+      "currency": "CNY"
+    },
+    "cumulative_profit": {
+      "value": 95.0,
+      "status": "available",
+      "currency": "CNY",
+      "basis": "observed_period_not_since_inception"
+    },
+    "time_weighted_return": {
+      "value": 0.09499999999999997,
+      "status": "available",
+      "method": "geometrically_linked_end_of_day_external_flow_adjusted"
+    },
+    "annualized_return": {
+      "value": null,
+      "status": "missing_data",
+      "reason": "at_least_one_year_required_for_annualized_return"
+    },
+    "max_drawdown": {
+      "value": 0.0,
+      "status": "available",
+      "frequency": "declared_daily_closes",
+      "observations": 3
+    },
+    "annualized_volatility": {
+      "value": 1.2833793281800978,
+      "status": "available",
+      "periods_per_year": 365,
+      "observations": 2
+    },
+    "sharpe_ratio": {
+      "value": 13.493825601872453,
+      "status": "available",
+      "observations": 2,
+      "periods_per_year": 365,
+      "risk_free": {
+        "currency": "CNY",
+        "annual_rate": 0.02,
+        "start": "2026-01-03",
+        "end": "2026-01-05",
+        "source_refs": [
+          "synthetic:example-only"
+        ]
+      }
+    }
+  },
+  "period": {
+    "start": "2026-01-03",
+    "end": "2026-01-05"
+  },
+  "asset_value_history": [
+    {
+      "date": "2026-01-03",
+      "value": 1000,
+      "currency": "CNY",
+      "timing": "end_of_day",
+      "complete_account": true,
+      "source_refs": [
+        "synthetic:example-only"
+      ],
+      "base_value": 1000.0
+    },
+    {
+      "date": "2026-01-04",
+      "value": 1595,
+      "currency": "CNY",
+      "timing": "end_of_day",
+      "complete_account": true,
+      "source_refs": [
+        "synthetic:example-only"
+      ],
+      "base_value": 1595.0
+    },
+    {
+      "date": "2026-01-05",
+      "value": 1395,
+      "currency": "CNY",
+      "timing": "end_of_day",
+      "complete_account": true,
+      "source_refs": [
+        "synthetic:example-only"
+      ],
+      "base_value": 1395.0
+    }
+  ],
+  "flow_totals": {
+    "deposits": 500.0,
+    "withdrawals": 200.0,
+    "external_distributions": 0.0,
+    "net_external_flows": 300.0,
+    "outside_account_fees": 0,
+    "currency": "CNY"
+  },
+  "return_curve": [
+    {
+      "date": "2026-01-03",
+      "wealth_index": 1.0
+    },
+    {
+      "date": "2026-01-04",
+      "wealth_index": 1.095
+    },
+    {
+      "date": "2026-01-05",
+      "wealth_index": 1.095
+    }
+  ],
+  "benchmark_comparisons": [
+    {
+      "name": "SYNTHETIC total-return benchmark",
+      "return_kind": "total_return",
+      "source_refs": [
+        "synthetic:example-only"
+      ],
+      "return": 0.040000000000000036,
+      "active_return": 0.05499999999999994,
+      "status": "available"
+    }
+  ],
+  "asset_performance": [],
+  "trade_research_links": [
+    {
+      "trade_id": "synthetic-trade-alpha",
+      "decision_id": "synthetic-alpha",
+      "source_refs": [
+        "synthetic:example-only"
+      ],
+      "trade_status": "reported_executed",
+      "meaning": "explicit_recorded_link_not_causal_attribution_or_verified_fill"
+    }
+  ],
+  "unlinked_trade_ids": [],
+  "unresolved_trade_links": [],
+  "data_gaps": [],
+  "coverage": {
+    "start": "2026-01-03",
+    "end": "2026-01-05",
+    "external_flows_complete": true,
+    "costs_complete": true,
+    "source_refs": [
+      "synthetic:example-only"
+    ]
+  },
+  "cash_flow_records": [
+    {
+      "date": "2026-01-04",
+      "value": 500,
+      "currency": "CNY",
+      "kind": "deposit",
+      "timing": "end_of_day",
+      "source_refs": [
+        "synthetic:example-only"
+      ]
+    },
+    {
+      "date": "2026-01-05",
+      "value": 200,
+      "currency": "CNY",
+      "kind": "withdrawal",
+      "timing": "end_of_day",
+      "source_refs": [
+        "synthetic:example-only"
+      ]
+    }
+  ],
+  "fee_records": [
+    {
+      "date": "2026-01-04",
+      "value": 5,
+      "currency": "CNY",
+      "included_in_valuation": true,
+      "source_refs": [
+        "synthetic:example-only"
+      ]
+    }
+  ],
+  "snapshot_revisions": [],
+  "semantics": [
+    "Account snapshots include only the declared account boundary, not unreported wealth or liabilities.",
+    "Holding P&L is not cumulative investment profit. Buys/sells/internal transfers are not external capital flows.",
+    "Return intervals run after the first closing valuation through the last close; opening-day flows are embedded in opening value.",
+    "Account values must include cash, fund NAV distributions and in-account costs. Do not subtract embedded fees twice.",
+    "Returns, backtests, simulations and proxy observations are separate. This is not a GIPS compliance claim."
+  ]
+}

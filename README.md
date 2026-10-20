@@ -34,4 +34,6 @@ ChatGPT 从工作空间的 `CHATGPT_WORKFLOW.md` 进入，先读取 `current_sta
 
 已有私人项目可以配置可选的 `provider` 接口，由引擎读取账户、历史研究和数据，调用各资产模型，再把全部资产结果交给私人组合模型。无需复制原事件账本或公开模型；不配置 provider 的空白工作空间仍独立运行。接口与命令见 [私人工作空间接入](docs/providers.md)。
 
+刷新同时生成研究成绩与真实投资成绩，按资产、期限和模型版本统计原研究结果，并在资金流、费用、净值与汇率完整时计算实际收益。完整报告和可选分享摘要均由私人工作空间生成。见 [成绩报告与输入口径](docs/performance.md) 及 [合成报告示例](examples/performance/README.md)。
+
 数据格式见 [docs/workspace.md](docs/workspace.md)；本轮实际结果、修复与接入边界见 [P1 验收记录](docs/acceptance.md)。MIT License。
