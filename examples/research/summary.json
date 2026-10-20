@@ -1,0 +1,176 @@
+{
+  "example_only": true,
+  "as_of": "2026-01-06T12:05:00+08:00",
+  "assets": [
+    "sample_defensive",
+    "sample_growth"
+  ],
+  "maturity_cycle": {
+    "discovered": 3,
+    "written": 3,
+    "completed": 2,
+    "awaiting_evaluation": 1,
+    "event_ids": [
+      "auto-review-d7c5d88d3abad5849dee7eaa8f3e8d02",
+      "auto-review-0cb2c21fdf8aac320f95f71d9c6efa98",
+      "auto-review-853415c5f00c0cad9f9c5476e3ac73fb"
+    ]
+  },
+  "expectation_difference": -0.25,
+  "unit": "percentage_points",
+  "mechanism_card": {
+    "mechanism_id": "financing_channel",
+    "mechanism_card_id": "financing_channel-medium",
+    "hypothesis": "SYNTHETIC cheaper financing may support investment and cash flows",
+    "horizon": "medium",
+    "status": "research_only",
+    "causal_status": "hypothesis_not_identified",
+    "supporting_evidence": [
+      "synthetic-supporting"
+    ],
+    "counter_evidence": [
+      "synthetic-counter"
+    ],
+    "context_evidence": [],
+    "missing_evidence": [
+      "independent channel identification",
+      "prior expectations"
+    ],
+    "alternative_explanations": [
+      "SYNTHETIC weaker final demand",
+      "SYNTHETIC demand rather than financing may dominate"
+    ],
+    "invalidation": "SYNTHETIC investment does not respond despite lower funding costs",
+    "next_observation": "SYNTHETIC comparable investment and cash-flow disclosures",
+    "expiry": null,
+    "forecast": null,
+    "source_refs": [
+      "https://example.org/synthetic-economics"
+    ],
+    "provided_counter_text": [
+      "SYNTHETIC weaker orders despite lower cost",
+      "SYNTHETIC weaker orders despite lower cost"
+    ]
+  },
+  "research_counts": {
+    "knowledge_records": 4,
+    "human_records": 4,
+    "unclassified_records": 0,
+    "workflow_and_account_records": 0,
+    "judgements": 4,
+    "due_or_reviewed_judgements": 3,
+    "known_deadline_due_judgements": 3,
+    "reviewed_judgements": 3,
+    "historical_deadlines_passed_including_retired": 3,
+    "unprocessed_due_judgements": 0,
+    "completed_review_tasks": 3,
+    "awaiting_review_tasks": 0,
+    "supported": 1,
+    "refuted": 1,
+    "mixed": 0,
+    "unscored_completed": 1,
+    "supported_parts_reviews": 2,
+    "refuted_parts_reviews": 1,
+    "documented_errors_reviews": 2,
+    "evidence_insufficient_reviews": 0,
+    "without_review_deadline": 0
+  },
+  "next_research_feedback": {
+    "recent_completed": [
+      {
+        "review_id": "synthetic-channel",
+        "event_id": "synthetic-channel-review",
+        "decision_id": "synthetic-channel",
+        "recorded_at": "2026-01-06T12:05:00+08:00",
+        "status": "reviewed",
+        "review_kind": "legacy_manual",
+        "verdict": "see_conclusion",
+        "facts": "SYNTHETIC rate difference and conflicting channel observations checked",
+        "conclusion": "SYNTHETIC evidence review complete; causal attribution remains unidentified",
+        "supported": [
+          "SYNTHETIC prior/event rate difference documented"
+        ],
+        "refuted": [],
+        "errors": [
+          "SYNTHETIC original channel lacked an independent investment mediator"
+        ],
+        "evidence_gaps": [
+          "SYNTHETIC causal identification still missing"
+        ],
+        "mechanisms": [
+          "SYNTHETIC financing remains a candidate channel"
+        ],
+        "next_hypotheses": [
+          "SYNTHETIC test demand-conditioned investment response"
+        ],
+        "competing_explanations": [
+          "SYNTHETIC final demand"
+        ],
+        "source_refs": [
+          "https://example.org/synthetic-economics"
+        ],
+        "detail_path": "data/events/synthetic-channel-review.json"
+      },
+      {
+        "review_id": "synthetic-sample_growth",
+        "event_id": "auto-review-853415c5f00c0cad9f9c5476e3ac73fb",
+        "decision_id": "synthetic-sample_growth",
+        "recorded_at": "2026-01-06T12:00:00+08:00",
+        "status": "reviewed",
+        "review_kind": "market",
+        "verdict": "refuted",
+        "facts": "{\"checks\": [{\"actual_account_return\": null, \"claim\": \"SYNTHETIC window return >=1%\", \"condition\": {\"claim\": \"SYNTHETIC window return >=1%\", \"currency\": \"USD\", \"end\": \"2026-01-05\", \"history_key\": \"sample_growth\", \"metric\": \"close_return_pct\", \"operator\": \"gte\", \"return_kind\": \"provider_adjusted_etf_price\", \"start\": \"2026-01-02\", \"symbol\": \"QQQ\", \"threshold\": 1, \"venue\": \"US\"}, \"condition_met\": false, \"end_bar\": {\"adjusted_close\": 98.0, \"available_at\": \"2026-01-05T16:15:00-05:00\", \"close\": 98.0, \"close_at\": \"2026-01-05T16:00:00-05:00\", \"date\": \"2026-01-05\", \"high\": 98.0, \"low\": 98.0, \"open\": 98.0}, \"input_path\": \"inputs/market.json\", \"source_url\": \"https://example.org/synthetic-prices\", \"start_bar\": {\"adjusted_close\": 100.0, \"available_at\": \"2026-01-02T16:15:00-05:00\", \"close\": 100.0, \"close_at\": \"2026-01-02T16:00:00-05:00\", \"date\": \"2026-01-02\", \"high\": 100.0, \"low\": 100.0, \"open\": 100.0}, \"status\": \"observed\", \"value\": -2.0000000000000018, \"vintage_status\": \"current_provider_history_not_point_in_time\", \"window_sha256\": \"7f00e0a8b6fd325c544e91028c82be685609e8fbc35388ca0778164b28cd5805\"}], \"macro_context\": {\"status\": \"not_supplied\"}, \"policy_checks\": [], \"research_evidence_available\": false}",
+        "conclusion": "已完成登记的客观条件对照：refuted。",
+        "supported": [],
+        "refuted": [
+          "仅此项观测条件未满足：SYNTHETIC window return >=1%；close_return_pct=-2.000000；不证明整体经济解释。"
+        ],
+        "errors": [
+          "仅此项观测条件未满足：SYNTHETIC window return >=1%；close_return_pct=-2.000000；不证明整体经济解释。"
+        ],
+        "evidence_gaps": [],
+        "mechanisms": [],
+        "next_hypotheses": [
+          "用新记录和新的未来窗口检验修订解释；本窗口不重复作为独立样本。"
+        ],
+        "competing_explanations": [],
+        "source_refs": [
+          "exports/knowledge/synthetic-sample_growth.json",
+          "inputs/market.json",
+          "https://example.org/synthetic-prices"
+        ],
+        "detail_path": "data/events/auto-review-853415c5f00c0cad9f9c5476e3ac73fb.json"
+      }
+    ],
+    "awaiting_evaluation": [],
+    "forward_observations": [],
+    "detail_path": "exports/reviews.json",
+    "counts": {
+      "recent_completed": 2,
+      "awaiting_evaluation": 0,
+      "forward_observations": 0
+    },
+    "usage": "研究前读取本反馈及相关原判断；逐项说明支持、反驳、缺口、仍适用机制和新假设。经验不自动修改模型权重、投资政策或交易权限。"
+  },
+  "portfolio": {
+    "status": "research_only",
+    "assets_received": [
+      "sample_defensive",
+      "sample_growth"
+    ],
+    "model_statuses": {
+      "sample_growth": "available",
+      "sample_defensive": "available"
+    },
+    "requires_recheck": [
+      "sample_growth"
+    ]
+  },
+  "model_versions": {
+    "sample_growth": "tutorial-v1",
+    "sample_defensive": "tutorial-v1"
+  },
+  "repeat_review_events_written": 0,
+  "original_judgement_unchanged": true,
+  "execution_allowed": false
+}

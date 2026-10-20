@@ -14,7 +14,7 @@ def write_json(path: Path, value: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(value, ensure_ascii=False, indent=2, default=str, allow_nan=False) + "\n"
     temp = path.with_suffix(".tmp")
-    temp.write_text(text, encoding="utf-8")
+    temp.write_text(text, encoding="utf-8", newline="\n")
     temp.replace(path)
 
 
@@ -83,7 +83,24 @@ def save_decision(root: Path, inputs: dict, clock: datetime) -> dict:
         if not event["review_at"]:
             raise ValueError("登记验证条件必须填写review_at")
         event["review_spec"] = review_spec
+    candidates = factor_candidates(root, inputs, clock, event)
+    if candidates:
+        event["factor_candidates"] = candidates
     return append_event(root, event, clock)
+
+
+def factor_candidates(root, inputs, clock, event):
+    """The workspace's existing factor system owns definition and eligibility."""
+    if not inputs.get("factor_candidates"):
+        return []
+    from research_engine.integration import optional
+    candidates = json.loads(inputs["factor_candidates"])
+    if not isinstance(candidates, list) or len(candidates) > 10:
+        raise ValueError("factor_candidates must be an array with at most 10 entries")
+    result = optional(root, clock, "factor_candidates", candidates=candidates, event=event)
+    if not isinstance(result, list):
+        raise ValueError("workspace has no configured candidate-factor pipeline")
+    return result
 
 
 def evidence_refs(value: str) -> list[str]:
@@ -117,7 +134,10 @@ def record_review(root: Path, inputs: dict, clock: datetime) -> dict:
         event["learning"] = learning
     previous = read_json(root / "data/events" / f"{key}.json")
     if previous:
-        if any(previous.get(k) != v for k, v in event.items()):
+        candidates = factor_candidates(root, inputs, clock, previous)
+        if candidates:
+            event["factor_candidates"] = candidates
+        if any(previous.get(k) != v for k, v in event.items()) or previous.get("factor_candidates", []) != candidates:
             raise ValueError("编号已存在但内容不同；不会覆盖原记录")
         return previous
     target = next((item for item in context(root, clock)["review_queue"] if item["id"] == review_id), None)
@@ -128,6 +148,9 @@ def record_review(root: Path, inputs: dict, clock: datetime) -> dict:
     event.update(review_metadata(root, target))
     if not event["original"]:
         raise ValueError("找不到原始判断，不能完成复盘")
+    candidates = factor_candidates(root, inputs, clock, event)
+    if candidates:
+        event["factor_candidates"] = candidates
     return append_event(root, event, clock)
 
 
@@ -154,8 +177,14 @@ def classify_decision(root: Path, inputs: dict, clock: datetime) -> dict:
 
 def context(root, clock):
     from research_engine.calendar import aware
+    from research_engine.integration import history
     aware(clock)
-    known = [e for e in events(root) if datetime.fromisoformat(e["recorded_at"]) <= clock]
+    combined = {}
+    for event in [*history(root, clock), *events(root)]:
+        if event["id"] in combined and combined[event["id"]] != event:
+            raise ValueError("workspace/provider event identity collision")
+        combined[event["id"]] = event
+    known = [e for e in combined.values() if datetime.fromisoformat(e["recorded_at"]) <= clock]
     return build_knowledge_views(root, known, clock.isoformat())
 
 
@@ -177,4 +206,6 @@ def apply_operation(root, inputs, clock, record_id=None):
     context(root, clock)
     from research_engine.mechanisms import export
     export(root, clock)
+    from research_engine.integration import export as export_workspace
+    export_workspace(root, clock)
     return result

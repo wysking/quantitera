@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "report": "live_portfolio_performance",
+  "audience": "optional_shareable_summary",
+  "selected_for_sharing": true,
+  "publication": "not_published",
+  "generated_at": "2026-01-06T12:00:00+08:00",
+  "period": {
+    "start": "2026-01-03",
+    "end": "2026-01-05"
+  },
+  "example_only": true,
+  "metrics": {
+    "time_weighted_return": {
+      "value": 0.09499999999999997,
+      "status": "available",
+      "reason": null
+    },
+    "annualized_return": {
+      "value": null,
+      "status": "missing_data",
+      "reason": "at_least_one_year_required_for_annualized_return"
+    },
+    "max_drawdown": {
+      "value": 0.0,
+      "status": "available",
+      "reason": null,
+      "observations": 3
+    },
+    "annualized_volatility": {
+      "value": 1.2833793281800978,
+      "status": "available",
+      "reason": null,
+      "observations": 2,
+      "periods_per_year": 365
+    },
+    "sharpe_ratio": {
+      "value": 13.493825601872453,
+      "status": "available",
+      "reason": null,
+      "observations": 2,
+      "periods_per_year": 365
+    }
+  },
+  "coverage": {
+    "valuation_observations": 3
+  },
+  "semantics": "Declared account-period returns; missing metrics remain unavailable. No balances, holdings, trade amounts or source paths are shared."
+}

@@ -111,6 +111,9 @@ def normalize_decision(event: dict) -> dict:
     }
     if event.get("review_spec"):
         result["review_spec"] = event["review_spec"]
+    for field in ("source_kind", "origin", "legacy_record", "factor_candidates"):
+        if field in event:
+            result[field] = event[field]
     if result["status"] not in VALID_STATUSES:
         result["original_status"] = result["status"]
         result["normalization_issues"] = ["unknown_status"]
@@ -156,7 +159,7 @@ def build_knowledge_views(root: Path, all_events: Iterable[dict], generated_at: 
             item["status"] = "superseded"
 
     reviews = sorted((e for e in all_events if e.get("type") == "review_completion"),
-                     key=lambda e: (e.get("recorded_at", ""), e["id"]))
+                     key=lambda e: (datetime.fromisoformat(e["recorded_at"]), e["id"]))
     for item in decisions:
         related_reviews = [e for e in reviews if (e.get("decision_id") or e["review_id"]) == item["id"]]
         if related_reviews:
@@ -244,6 +247,9 @@ def build_knowledge_views(root: Path, all_events: Iterable[dict], generated_at: 
             "details": "exports/knowledge/<decision_id>.json",
             "reviews": "exports/reviews.json",
             "mechanisms": "exports/mechanisms.json",
+            "research_performance": "exports/research_performance.json",
+            "live_portfolio_performance": "exports/live_portfolio_performance.json",
+            "shareable_performance": "exports/shareable/",
         },
     }
     payloads = {

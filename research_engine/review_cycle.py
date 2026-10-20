@@ -131,7 +131,14 @@ def assess(root, task, bundle, clock):
     meta = review_metadata(root, task)
     original = meta["original"]
     spec, spec_source = _spec(root, task, original)
+    from research_engine.integration import optional
+    research_evidence = optional(root, clock, "review_evidence", task=task, original=original) or {}
+    if not isinstance(research_evidence, dict):
+        raise ValueError("review_evidence must return a mapping")
     learning = {field: list(spec.get(field, [])) for field in LEARNING_FIELDS}
+    if spec["kind"] != "market":
+        for field in ("evidence_gaps", "mechanisms", "competing_explanations"):
+            learning[field].extend(_strings(research_evidence.get(field, []), field))
     if not original:
         learning["evidence_gaps"].append("找不到原始判断，不能完成验证。")
     checks = [compare(check, bundle, clock) for check in spec.get("checks", [])]
@@ -162,13 +169,14 @@ def assess(root, task, bundle, clock):
     status = "reviewed" if complete else "awaiting_evaluation"
     conclusion = (f"已完成登记的客观条件对照：{verdict}。" if complete else
                   "已整理可程序化证据，整体判断仍待评价；请按原条件核对缺口与竞争解释。")
-    refs = list(dict.fromkeys([*meta["original_source_refs"], *([spec_source] if spec_source.startswith("config/") else []),
+    refs = list(dict.fromkeys([*meta["original_source_refs"], *research_evidence.get("source_refs", []), *([spec_source] if spec_source.startswith("config/") else []),
                               *[c[k] for c in checks for k in ("input_path", "source_url") if c.get(k)],
                               *([bundle["record_path"]] if macro.get("series") and bundle.get("record_path") else []),
                               *[v["source_url"] for v in macro.get("series", {}).values() if v.get("source_url")]]))
     return {**meta, "review_kind": spec["kind"], "review_spec": spec, "spec_source": spec_source,
-            "checks": checks, "policy_checks": policy_checks, "macro_context": macro, "learning": learning,
-            "facts": json.dumps({"checks": checks, "policy_checks": policy_checks, "macro_context": macro}, ensure_ascii=False, sort_keys=True),
+            "checks": checks, "policy_checks": policy_checks, "macro_context": macro, "research_evidence": research_evidence, "learning": learning,
+            "facts": json.dumps({"checks": checks, "policy_checks": policy_checks, "macro_context": macro,
+                                 "research_evidence_available": bool(research_evidence)}, ensure_ascii=False, sort_keys=True),
             "conclusion": conclusion, "source_refs": refs, "status": status, "verdict": verdict,
             "execution_status": "not_inferred", "execution_allowed": False, "actual_account_return": None}
 
@@ -205,14 +213,26 @@ def advance_reviews(root, clock, bundle=None):
             "event_ids": [e["id"] for e in added]}
 
 
+def latest_reviews(reviews):
+    """A completed window remains terminal even if a later gap snapshot exists."""
+    latest = {}
+    for event in sorted(reviews, key=lambda e: (datetime.fromisoformat(e["recorded_at"]), e["id"])):
+        previous = latest.get(event["review_id"])
+        # Queue closure is terminal. A gap snapshot with the same cutoff must
+        # not hide the completed result merely because its hash sorts later.
+        if (previous and previous.get("status", "reviewed") == "reviewed"
+                and event.get("status") == "awaiting_evaluation"):
+            continue
+        latest[event["review_id"]] = event
+    return latest
+
+
 def feedback_for(asset, reviews, decisions):
     """Always included in the normal current_state entry, even for old assets."""
     by_id = {d["id"]: d for d in decisions}
-    latest = {}
-    for event in sorted(reviews, key=lambda e: (e.get("recorded_at", ""), e["id"])):
-        latest[event["review_id"]] = event
-    result = {"recent_completed": [], "awaiting_evaluation": [], "detail_path": "exports/reviews.json"}
-    for event in sorted(latest.values(), key=lambda e: (e.get("recorded_at", ""), e["id"]), reverse=True):
+    latest = latest_reviews(reviews)
+    result = {"recent_completed": [], "awaiting_evaluation": [], "forward_observations": [], "detail_path": "exports/reviews.json"}
+    for event in sorted(latest.values(), key=lambda e: (datetime.fromisoformat(e["recorded_at"]), e["id"]), reverse=True):
         decision = by_id.get(event.get("decision_id") or event["review_id"], {})
         assets = event.get("assets") or decision.get("assets", [])
         if asset not in assets and "all" not in assets:
@@ -223,11 +243,12 @@ def feedback_for(asset, reviews, decisions):
                 "recorded_at": event.get("recorded_at"), "status": event.get("status", "reviewed"),
                 "review_kind": event.get("review_kind", "legacy_manual"), "verdict": event.get("verdict", "see_conclusion"),
                 "facts": event.get("facts", ""), "conclusion": event.get("conclusion", ""), **learning,
-                "source_refs": event.get("source_refs", []), "detail_path": f"data/events/{event['id']}.json"}
-        key = "awaiting_evaluation" if item["status"] == "awaiting_evaluation" else "recent_completed"
+                "source_refs": event.get("source_refs", []), "detail_path": event.get("origin", {}).get("path") or f"data/events/{event['id']}.json"}
+        key = ("awaiting_evaluation" if item["status"] == "awaiting_evaluation" else
+               "forward_observations" if item["review_kind"] == "forward_observation" else "recent_completed")
         result[key].append(item)
-    result["counts"] = {k: len(result[k]) for k in ("recent_completed", "awaiting_evaluation")}
-    for key in ("recent_completed", "awaiting_evaluation"):
+    result["counts"] = {k: len(result[k]) for k in ("recent_completed", "awaiting_evaluation", "forward_observations")}
+    for key in ("recent_completed", "awaiting_evaluation", "forward_observations"):
         result[key] = result[key][:5]
     result["usage"] = "研究前读取本反馈及相关原判断；逐项说明支持、反驳、缺口、仍适用机制和新假设。经验不自动修改模型权重、投资政策或交易权限。"
     return result

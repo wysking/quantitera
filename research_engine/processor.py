@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timedelta
+from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
@@ -15,7 +15,7 @@ from research_engine.workspace import apply_operation, now, read_json, write_jso
 OPERATIONS = {"save_decision", "record_review", "classify_decision", "record_evidence", "research_refresh", "status"}
 FIELDS = {"reference", "asset", "note", "assets", "subjects", "topics", "aliases", "horizon", "status", "confidence", "question",
           "facts", "user_hypotheses", "model_inference", "conclusion", "invalidation", "review_at", "supersedes", "related_ids",
-          "source_refs", "review_id", "target_id", "record_kind", "review_spec", "review_result", "evidence"}
+          "source_refs", "review_id", "target_id", "record_kind", "review_spec", "review_result", "evidence", "factor_candidates"}
 
 
 class RequestFileError(ValueError):
@@ -46,6 +46,8 @@ def validate_request(payload: object) -> dict:
     for field, operation in (("review_spec", "save_decision"), ("review_result", "record_review"), ("evidence", "record_evidence")):
         if field in inputs and op != operation:
             raise ValueError(f"{field} only supports {operation}")
+    if "factor_candidates" in inputs and op not in {"save_decision", "record_review"}:
+        raise ValueError("factor_candidates only supports judgements and reviews")
     return dict(inputs, operation=op)
 
 
@@ -98,9 +100,11 @@ def process_one(root: Path, path: Path, clock: datetime) -> dict:
 def process_pending(root: Path, clock: datetime | None = None) -> list[dict]:
     clock = clock or now()
     receipts = []
-    for index, path in enumerate(sorted((root / "inbox").glob("*.json"))):
+    for path in sorted((root / "inbox").glob("*.json")):
         try:
-            receipts.append(process_one(root, path, clock + timedelta(microseconds=index)))
+            # One refresh has one knowledge cutoff. Artificial future timestamps
+            # hide later accepted requests when the CLI exports at that cutoff.
+            receipts.append(process_one(root, path, clock))
         except RequestFileError as exc:
             # Preserve any prior success receipt. Never read through symlinks,
             # and do not swallow disk/ledger integrity failures as file errors.
@@ -110,7 +114,7 @@ def process_pending(root: Path, clock: datetime | None = None) -> list[dict]:
             receipt = read_json(root / relative)
             if not receipt:
                 receipt = {"request_id": path.stem, "request_sha256": exc.digest,
-                    "processed_at": (clock + timedelta(microseconds=index)).isoformat(),
+                    "processed_at": clock.isoformat(),
                     "status": "rejected", "operation": None, "error": str(exc),
                     "error_path": relative}
                 write_json(root / relative, receipt)

@@ -21,21 +21,27 @@ def initialize(root):
 
 
 def discussion(root, asset, clock):
-    apply_operation(root, {"operation": "status"}, clock)
-    state = read_json(root / "exports/current_state.json")["assets"].get(asset, {})
+    apply_operation(root, {"operation": "research_refresh"}, clock)
+    states = read_json(root / "exports/current_state.json")["assets"]
+    state = states.get(asset, {})
     mechanisms = read_json(root / "exports/mechanisms.json")["assets"].get(asset, {})
-    return {"asset": asset, "current_research": state, "economic_research": mechanisms,
+    return {"asset": asset, "current_research": state,
+            "global_research": states.get("all", {}) if asset != "all" else {},
+            "economic_research": mechanisms,
+            "workspace_research": read_json(root / "exports/workspace.json", {}).get("assets", {}).get(asset, {}),
             "research_instructions": [
-                "Read recent completed reviews and unresolved evidence before making a new judgement.",
+                "Read asset and global_research completed reviews and unresolved evidence before making a new judgement.",
                 "Explain supported/refuted parts, errors, evidence gaps, surviving mechanisms and new hypotheses.",
                 "Compare prior expectations, source timestamps, horizons, counter-evidence and competing explanations.",
+                "Check workspace model/data timestamps and missing capabilities; proxies are not account returns.",
                 "Save the resulting judgement with review_at and explicit review_spec; do not infer personal trades.",
+                "Register new testable mechanisms through the configured candidate-factor pipeline; price outcomes do not identify causes.",
             ], "execution_allowed": False}
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="quantitera")
-    parser.add_argument("command", choices=("init", "refresh", "process", "status", "discuss"))
+    parser.add_argument("command", choices=("init", "refresh", "process", "status", "discuss", "workspace", "model", "portfolio", "performance"))
     parser.add_argument("--workspace", type=Path, required=True)
     parser.add_argument("--asset")
     parser.add_argument("--as-of", help="Timezone-aware clock, for reproducible research/tests")
@@ -54,10 +60,24 @@ def main(argv=None):
             receipts = process_pending(root, clock)
             result = apply_operation(root, {"operation": "research_refresh" if args.command == "refresh" else "status"}, clock)
             result = {"requests_checked": len(receipts), "review_cycle": result, "execution_allowed": False}
+            if args.command == "refresh":
+                from research_engine.performance import export
+                result["performance_reports"] = export(root, clock)
+        elif args.command == "performance":
+            from research_engine.performance import export
+            result = export(root, clock)
         elif args.command == "discuss":
             if not args.asset:
                 parser.error("discuss requires --asset")
             result = discussion(root, args.asset, clock)
+        elif args.command in {"workspace", "model", "portfolio"}:
+            from research_engine import integration
+            apply_operation(root, {"operation": "status"}, clock)
+            if args.command == "model" and not args.asset:
+                parser.error("model requires --asset")
+            result = (integration.model(root, args.asset, clock) if args.command == "model" else
+                      integration.portfolio(root, clock) if args.command == "portfolio" else
+                      integration.export(root, clock))
         else:
             apply_operation(root, {"operation": "status"}, clock)
             result = {"state_path": "exports/current_state.json", "execution_allowed": False}
