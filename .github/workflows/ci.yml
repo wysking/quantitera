@@ -72,6 +72,9 @@ jobs:
         run: |
           python - <<'PY'
           import hashlib
+          import io
+          import tarfile
+          import zipfile
           import json
           import os
           import subprocess
@@ -124,6 +127,29 @@ jobs:
               assert hashlib.sha256(contents[name]).hexdigest() == sha, name + " checksum mismatch"
           sums = {name: sha for sha, name in (line.split() for line in contents["SHA256SUMS"].decode().splitlines())}
           assert sums == {name: sha for name, sha in expected.items() if name != "SHA256SUMS"}
+          tracked = set(subprocess.check_output(["git", "ls-tree", "-r", "--name-only", accepted], text=True).splitlines())
+          def same_source(name, value):
+              original = subprocess.check_output(["git", "show", accepted + ":" + name])
+              assert value.replace(b"\r\n", b"\n") == original.replace(b"\r\n", b"\n"), name + " differs from accepted source"
+          with zipfile.ZipFile(io.BytesIO(contents["quantitera-0.5.0-py3-none-any.whl"])) as wheel:
+              for name in wheel.namelist():
+                  if name.endswith("/"):
+                      continue
+                  assert name.startswith(("research_engine/", "quantitera-0.5.0.dist-info/")), name
+                  if name.startswith("research_engine/"):
+                      assert name in tracked, "Untracked wheel source: " + name
+                      same_source(name, wheel.read(name))
+              same_source("LICENSE", wheel.read("quantitera-0.5.0.dist-info/licenses/LICENSE"))
+          with tarfile.open(fileobj=io.BytesIO(contents["quantitera-0.5.0.tar.gz"]), mode="r:gz") as source:
+              for item in source.getmembers():
+                  if item.isdir():
+                      continue
+                  assert item.isfile() and item.name.startswith("quantitera-0.5.0/"), item.name
+                  name = item.name.removeprefix("quantitera-0.5.0/")
+                  assert name in tracked or name in {"PKG-INFO", "setup.cfg"} or name.startswith("quantitera.egg-info/"), name
+                  if name in tracked:
+                      same_source(name, source.extractfile(item).read())
+          print("Original wheel and sdist match accepted tracked sources; no private paths.")
           body = release["body"].replace(
               "此 Release 先保存为发布准备草稿；默认分支合并与正式发布状态须分别核对。",
               "整体验收 PR 已合并 main；本 Release 在 main CI 通过并核对固定 tag 与原附件 SHA256 后正式发布。")
