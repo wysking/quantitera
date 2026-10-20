@@ -1,4 +1,4 @@
-# 私人工作空间接入（0.3.0）
+# 私人工作空间接入（0.5.0）
 
 保留原项目的账户、资产模型、策略、数据和档案，在标准工作空间中配置一个可选 Python 入口。公开包只负责调用和知识反馈，不包含具体资产模型或账户政策。
 
@@ -38,6 +38,7 @@ discuss 在正式研究前推进到期验证，不依赖用户手动先 refresh�
 | --- | --- |
 | review_evidence | task / original；返回机制支持与反证、缺失证据、竞争解释及来源的对象，附在复盘 research_evidence 中。research/policy 保持待评价，market 仍只按原条件验证价格事实 |
 | factor_candidates | candidates / event；复用私人已有因子契约，返回核对后的候选数组。save_decision / record_review 的 factor_candidates 为 JSON 数组字符串，拒绝时整笔请求不落账 |
+| performance_inputs | 返回 source、research、live：原机制/因子/回测/模拟状态及实际账户快照、交易等事实，供两份成绩报告使用。字段与完整性要求见 [performance.md](performance.md) |
 
 未启用能力的 provider 无需实现额外操作。候选因子只作为判断或复盘的附属研究定义保存；私人单写入流程再交给原候选系统登记与验证，不能在 provider 校验或临时请求处理中写外部账本。原因子校验、权重资格与失败结果均由原系统维护；公开引擎没有另一套因子账本。
 
@@ -48,5 +49,7 @@ history 为只读穿透视图，原记录不复制进新账本。引擎只追加
 各模型输出、组合模型输出的执行许可始终为 false。模型的模拟金额、代理收益和来源数量不能代替账户成交、真实收益或因果证据。provider 应核对来源的账本版本、账户日期和研究状态；缺口及故障不能用旧结果冒充当前有效模型。
 
 不配置 provider 时，这三个扩展命令返回 not_configured，原有空白工作空间的归档、客观验证和反馈不受影响。没有新增资产注册框架、因子系统或第二份交易账本。
+
+可运行的 provider 示例为 [tutorial_models.py](../examples/tutorial_models.py)，由 [research_demo.py](../examples/research_demo.py) 复制到新工作空间后调用，不依赖 tests 或私人源码。示例的短窗口观察仅用于演示接口；自己的模型、参数和策略继续在私人项目维护。CLI 应从该私人模块可导入的目录运行，或先安装自己的 Python 包。
 
 0.2.1 的模板携带 .gitattributes，统一 LF；JSON 写入也固定 LF，避免 Windows 与 Ubuntu 克隆造成已处理 inbox 的字节摘要改变。既有工作空间可添加同一属性文件，不重建或修改原私人账本。

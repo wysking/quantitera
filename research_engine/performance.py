@@ -148,7 +148,9 @@ def research_performance(decisions, reviews, extra, clock):
 
 def export(root, clock):
     from research_engine.integration import optional, export as export_workspace
+    from research_engine.mechanisms import export as export_mechanisms
     views = context(root, clock)
+    export_mechanisms(root, clock)
     export_workspace(root, clock)
     decisions = [read_json(root / item["detail_path"]) for item in views["index"]]
     reviews = read_json(root / "exports/reviews.json")["items"]

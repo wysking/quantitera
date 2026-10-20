@@ -1,0 +1,6 @@
+include README.md LICENSE AGENTS.md CONTRIBUTING.md CHANGELOG.md provenance.json
+include .github/workflows/ci.yml
+graft docs
+graft examples
+graft tests
+global-exclude __pycache__ *.py[cod]

@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1, Node 24
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0, Node 24
         with:
           python-version: '3.12'
       - run: python -m pip install -e '.[test]'
@@ -41,3 +41,13 @@ jobs:
           test -f exports/live_portfolio_performance.json
           test -f exports/shareable/live_portfolio_performance.md
           "$engine_python" -I -m research_engine discuss --workspace . --asset demo
+          cd "$RUNNER_TEMP"
+          cp -R "$GITHUB_WORKSPACE/examples" ./examples
+          "$engine_python" -I -c "import research_engine; assert 'site-packages' in research_engine.__file__"
+          "$engine_python" -m examples.research_demo --workspace tutorial-workspace
+          cd tutorial-workspace
+          "$engine_python" -m research_engine portfolio --workspace . --as-of '2026-01-06T12:05:00+08:00'
+          "$engine_python" -m research_engine refresh --workspace . --as-of '2026-01-06T12:05:00+08:00'
+          test -f exports/tutorial/research_report.md
+          cd "$RUNNER_TEMP"
+          "$engine_python" -m examples.performance_demo --workspace performance-workspace
