@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -9,6 +9,7 @@ description = "QuantItera — Discover. Reason. Validate. Evolve."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
+license-files = ["LICENSE", "NOTICE.md", "licenses/*.txt", "licenses/README.md"]
 dependencies = ["tzdata; sys_platform == 'win32'"]
 keywords = ["quantitative-research", "economic-mechanisms", "validation", "research-feedback"]
 
@@ -24,9 +25,10 @@ test = ["pytest==8.3.5"]
 quantitera = "research_engine.__main__:main"
 
 [tool.setuptools.packages.find]
-include = ["research_engine*"]
+include = ["research_engine*", "quantitera_calendars*"]
 
 [tool.setuptools.package-data]
+quantitera_calendars = ["*.json"]
 research_engine = ["*.json", "workspace_template/**/*", "workspace_template/.gitignore", "workspace_template/.gitattributes", "workspace_template/.github/workflows/*.yml"]
 
 [tool.pytest.ini_options]
