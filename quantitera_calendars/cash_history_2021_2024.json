@@ -9,7 +9,7 @@
   ],
   "generator": "exchange_calendars==4.11.3, XNYS/XSHG/XHKG schedules; official HKEX overrides applied",
   "upstream_license": "Apache-2.0",
-  "upstream_ref": "https://github.com/gerrymanoim/exchange_calendars/tree/v4.11.3",
+  "upstream_ref": "https://github.com/gerrymanoim/exchange_calendars/tree/4.11.3",
   "source_refs": {
     "CN": [
       "https://www.sse.com.cn/disclosure/announcement/general/c/c_20201224_5286949.shtml",

@@ -1,6 +1,8 @@
-include README.md LICENSE AGENTS.md CONTRIBUTING.md CHANGELOG.md provenance.json
+include README.md LICENSE NOTICE.md AGENTS.md CONTRIBUTING.md CHANGELOG.md provenance.json
 include .github/workflows/ci.yml
 graft docs
 graft examples
 graft tests
 global-exclude __pycache__ *.py[cod]
+
+graft licenses
