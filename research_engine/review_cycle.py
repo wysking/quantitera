@@ -213,14 +213,25 @@ def advance_reviews(root, clock, bundle=None):
             "event_ids": [e["id"] for e in added]}
 
 
+def _has_manual_analysis(event):
+    """Distinguish evaluated findings from an automated evidence-gap snapshot."""
+    return (event.get("producer") != "daily_review_v1"
+            and any((event.get("learning") or {}).get(field) for field in LEARNING_FIELDS
+                    if field != "evidence_gaps"))
+
+
 def latest_reviews(reviews):
-    """A completed window remains terminal even if a later gap snapshot exists."""
+    """Keep terminal results and manual analysis when automated gaps refresh."""
     latest = {}
     for event in sorted(reviews, key=lambda e: (datetime.fromisoformat(e["recorded_at"]), e["id"])):
         previous = latest.get(event["review_id"])
         # Queue closure is terminal. A gap snapshot with the same cutoff must
         # not hide the completed result merely because its hash sorts later.
         if (previous and previous.get("status", "reviewed") == "reviewed"
+                and event.get("status") == "awaiting_evaluation"):
+            continue
+        if (previous and _has_manual_analysis(previous)
+                and event.get("producer") == "daily_review_v1"
                 and event.get("status") == "awaiting_evaluation"):
             continue
         latest[event["review_id"]] = event
@@ -232,7 +243,9 @@ def feedback_for(asset, reviews, decisions):
     by_id = {d["id"]: d for d in decisions}
     latest = latest_reviews(reviews)
     result = {"recent_completed": [], "awaiting_evaluation": [], "forward_observations": [], "detail_path": "exports/reviews.json"}
-    for event in sorted(latest.values(), key=lambda e: (datetime.fromisoformat(e["recorded_at"]), e["id"]), reverse=True):
+    for event in sorted(latest.values(), key=lambda e: (
+            e.get("status") == "awaiting_evaluation" and _has_manual_analysis(e),
+            datetime.fromisoformat(e["recorded_at"]), e["id"]), reverse=True):
         decision = by_id.get(event.get("decision_id") or event["review_id"], {})
         assets = event.get("assets") or decision.get("assets", [])
         if asset not in assets and "all" not in assets:
