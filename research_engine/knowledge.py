@@ -208,7 +208,8 @@ def build_knowledge_views(root: Path, all_events: Iterable[dict], generated_at: 
     } for item in index if item["review_at"] and item["status"] in {"active", "unresolved"}]
     completed = [e for e in reviews if e.get("status", "reviewed") == "reviewed"]
     completed_ids = {e["review_id"] for e in completed}
-    latest_reviews = {e["review_id"]: e for e in reviews}
+    from research_engine.review_cycle import latest_reviews as select_latest_reviews
+    latest_reviews = select_latest_reviews(reviews)
     review_targets = {item["id"]: item for item in review_queue}
     review_queue = [item for item in review_queue if item["id"] not in completed_ids]
     for item in review_queue:
