@@ -1,3 +1,5 @@
+> 通用 AI 助手（含 Gemini、ChatGPT）请优先使用 [AI_WORKFLOW.md](AI_WORKFLOW.md)；本文件保留用于向后兼容。
+
 # QuantItera 研究入口
 
 本文件属于私有工作空间。不要把个人数据发到公开引擎仓库。

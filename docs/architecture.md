@@ -20,7 +20,7 @@ flowchart TB
       P --> O
       A[免费 Actions 定时串行刷新] --> CLI
     end
-    O --> H[研究者 / ChatGPT 先读历史反馈]
+    O --> H[研究者 / AI 助手先读历史反馈]
     H --> Q
 ```
 
@@ -36,7 +36,7 @@ flowchart TB
 | identity.py / calendar.py / market_data.py | 标的、口径、完整交易窗口与价格可获知时间 |
 | integration.py | 可选 provider；调用自己的历史、资产模型和组合模型 |
 | performance.py / live_performance.py | 研究统计、真实资金流调整计算、明确缺口及可选摘要 |
-| research_engine/workspace_template/ | 空白工作空间、ChatGPT 入口与私人 Actions 模板 |
+| research_engine/workspace_template/ | 空白工作空间、AI 助手入口与私人 Actions 模板 |
 | examples/ | 纯合成教程、模型和可阅读报告 |
 | tests/ | 公共算法回归、真实 CLI、工作空间/模型契约和端到端测试 |
 

@@ -8,7 +8,7 @@
 2. 保存到自己的私有 GitHub 仓库，使用 main 为默认分支；个人目录不加进公开引擎。
 3. 提交模板 .github/workflows/research.yml、.gitattributes 和空目录占位文件。Actions 需允许官方 checkout/setup-python 及本仓库 GITHUB_TOKEN 写 contents；模板已声明 contents: write。仓库规则和分支保护仍须允许保存结果。
 4. 如 provider 依赖私人 Python 包，在安装引擎后安装这些依赖；工作空间根目录也可导入该目录的模块。原项目有写入者时沿用同一并发组，在其完成后刷新，避免同时改账本。
-5. 自己的数据入口更新 inputs/market.json；ChatGPT 按入口协议写 inbox。配置完成后等待正常输入提交或日程，无需每天手动运行 Actions。
+5. 自己的数据入口更新 inputs/market.json；AI 助手（如 Gemini 通过 GitHub MCP 连接器，或 ChatGPT 通过插件）按入口协议写 inbox。配置完成后等待正常输入提交或日程，无需每天手动运行 Actions。
 
 模板安装公开 tag v0.5.0。升级时在自己的工作流提交新 pin，保留原数据，不对已有目录重新 init。
 
