@@ -20,6 +20,7 @@ def test_empty_workspace_never_requires_personal_seed_or_models(tmp_path, capsys
     assert read_json(root / "config/research.json") == {"schema_version": 1, "mechanisms": {}}
     assert read_json(root / "inputs/market.json") == {"histories": {}}
     assert not events(root)
+    assert (root / "AI_WORKFLOW.md").is_file()
     assert (root / ".github/workflows/research.yml").is_file()
     assert main(["refresh", "--workspace", str(root), "--as-of", CLOCK.isoformat()]) == 0
     assert read_json(root / "exports/current_state.json")["assets"] == {}

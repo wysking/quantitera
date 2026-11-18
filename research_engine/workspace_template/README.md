@@ -2,7 +2,7 @@
 
 本模板为空，没有资产、模型、策略、组合或交易记录。把工作空间放在独立的私有仓库。
 
-ChatGPT先读取CHATGPT_WORKFLOW.md及exports/current_state.json；形成结论后创建inbox请求。私有工作空间的Actions和定时任务自动处理请求、检查到期窗口并保存反馈，无需手动运行Actions。
+AI 助手（如 Gemini、ChatGPT）先读取 `AI_WORKFLOW.md`（兼容 `CHATGPT_WORKFLOW.md`）及 `exports/current_state.json`；形成结论后创建 `inbox` 请求。私有工作空间的 Actions 和定时任务自动处理请求、检查到期窗口并保存反馈，无需手动运行 Actions。
 
 inputs/market.json由你的私人数据入口提供。它保存带标的、币种、口径和可获知时间的history/bars。没有数据时仍会保留待评价，不自动下载另一标的替代。
 

@@ -6,9 +6,9 @@
 
 An open research engine connecting economic hypotheses, timestamped judgements, mature outcome checks, and reusable feedback. Keep your data, models and accounts in your own workspace.
 
-QuantItera 把经济机制研究、事前判断、到期验证和历史经验连成一个持续积累的研究过程。它是 Python 开源引擎，也可以作为 ChatGPT 的研究工作空间：每次正式研究先读历史反馈，研究者形成判断后以结构化请求归档，程序在结果成熟时验证明确条件，再把支持、反驳、错误和证据缺口送回下一轮研究。
+QuantItera 把经济机制研究、事前判断、到期验证和历史经验连成一个持续积累的研究过程。它是 Python 开源引擎，也可以作为 AI 助手（如 Gemini、ChatGPT）的研究工作空间：每次正式研究先读历史反馈，研究者形成判断后以结构化请求归档，程序在结果成熟时验证明确条件，再把支持、反驳、错误和证据缺口送回下一轮研究。
 
-“自主迭代”包含自动到期检查、客观验证、知识整理和报告更新。最新信息搜集、经济机制推理和复杂因果评价仍由研究者或 ChatGPT 完成；引擎没有后台大模型、收费 API 或交易执行。
+“自主迭代”包含自动到期检查、客观验证、知识整理和报告更新。最新信息搜集、经济机制推理和复杂因果评价仍由研究者或 AI 助手完成；引擎没有后台大模型、收费 API 或交易执行。
 
 ## 研究如何循环
 
@@ -42,7 +42,7 @@ flowchart LR
 | 统一模型接口 | 私人 provider 调用独立资产模型和用户级组合模型，显式传入研究反馈并检查反馈版本 |
 | 研究成绩 | 按资产、期限和模型版本统计原判断、复盘、前向观察、机制与因子进度；未打分保持未打分 |
 | 真实投资成绩 | 完整资料下处理外部资金流、分红、费用、汇率、TWR、风险和可比基准；缺失指标说明所需资料 |
-| 空白工作空间与 Actions | 独立数据目录、ChatGPT 入口和串行定时模板；不带个人持仓、策略或默认模型 |
+| 空白工作空间与 Actions | 独立数据目录、AI 助手入口（Gemini / ChatGPT）和串行定时模板；不带个人持仓、策略或默认模型 |
 
 核心能力复用原 V6 / P1 实现，[来源与迁移边界](docs/reuse.md) 可以核对。完整模块关系见 [架构说明](docs/architecture.md)。
 
@@ -97,7 +97,7 @@ python -m examples.performance_demo --workspace ../quantitera-performance-demo
 
 把初始化目录保存到自己的**私有 GitHub 仓库** main 分支，模板内的 [.github/workflows/research.yml](research_engine/workspace_template/.github/workflows/research.yml) 使用标准 Ubuntu runner，串行处理请求、检查到期任务并保存报告。配置完成后不需要每天手动运行 Actions。
 
-行情仍由自己的数据入口更新 inputs/market.json。数据尚未更新时，任务明确等待；复杂经济研究通过工作空间 CHATGPT_WORKFLOW.md 继续。默认分支、写入权限、调度时区和免费额度边界见 [自动刷新指南](docs/automation.md)。
+行情仍由自己的数据入口更新 inputs/market.json。数据尚未更新时，任务明确等待；复杂经济研究通过工作空间 AI_WORKFLOW.md（兼容 CHATGPT_WORKFLOW.md）继续。默认分支、写入权限、调度时区和免费额度边界见 [自动刷新指南](docs/automation.md)。
 
 ## 开发与评估
 

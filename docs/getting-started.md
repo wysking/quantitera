@@ -35,7 +35,7 @@ python -m research_engine refresh --workspace ../my-research
 
 ```text
 my-research/
-  CHATGPT_WORKFLOW.md       正式研究入口
+  AI_WORKFLOW.md           通用研究入口（含 Gemini MCP 说明；兼容 CHATGPT_WORKFLOW.md）
   config/research.json     机制假设、可选私人 provider
   config/performance.json  分享选项，默认关闭
   inputs/market.json       带身份/时间的市场输入
@@ -84,7 +84,7 @@ python -m research_engine portfolio --workspace ../my-research
 python -m research_engine discuss --workspace ../my-research --asset my_asset
 ```
 
-ChatGPT 先读工作空间 CHATGPT_WORKFLOW.md。discuss 推进到期检查，并返回历史支持/反驳、错误、缺口、仍有效机制及新假设。研究者随后核对新原始信息、事前预期、发布时间和竞争解释。方法见 [research-method.md](research-method.md)。
+AI 助手（如 Gemini、ChatGPT）先读工作空间 `AI_WORKFLOW.md`（兼容 `CHATGPT_WORKFLOW.md`）。`discuss` 推进到期检查，并返回历史支持/反驳、错误、缺口、仍有效机制及新假设。研究者随后核对新原始信息、事前预期、发布时间和竞争解释。方法见 [research-method.md](research-method.md)。
 
 ## 7. 归档判断，自动登记未来验证
 
@@ -98,7 +98,7 @@ python -m research_engine refresh --workspace ../my-research
 
 引擎自动处理请求、归档并登记任务。核对 outbox/<同编号>.json 的 status=succeeded，再读 exports/review_queue.json。命令执行成功不等于每个请求均成功；拒绝理由保留在回执。已处理请求不能原地修改。
 
-**普通聊天不会自行同步进账本。** ChatGPT 或用户必须保存结构化请求，随后本地 refresh 或工作流自动处理。省略 record_kind 时保留 unclassified，不编造研究数量。
+**普通聊天不会自行同步进账本。** AI 助手或用户必须保存结构化请求，随后本地 `refresh` 或工作流自动处理。省略 `record_kind` 时保留 `unclassified`，不编造研究数量。
 
 ## 8. 自动检查成熟结果
 
