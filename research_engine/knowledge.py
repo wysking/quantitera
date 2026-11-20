@@ -168,9 +168,10 @@ def build_knowledge_views(root: Path, all_events: Iterable[dict], generated_at: 
     details = root / "exports/knowledge"
     details.mkdir(parents=True, exist_ok=True)
     for item in decisions:
-        (details / f'{item["id"]}.json').write_text(
-            json.dumps(item, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8"
-        )
+        target = details / f'{item["id"]}.json'
+        rendered = json.dumps(item, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+        if not target.exists() or target.read_text(encoding="utf-8") != rendered:
+            target.write_text(rendered, encoding="utf-8")
 
     index = [{
         "id": item["id"], "decision_date": item["decision_date"], "assets": item["assets"],

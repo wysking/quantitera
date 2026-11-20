@@ -29,9 +29,9 @@ def optional(root, clock, operation, **kwargs):
     return call(root, clock, operation, **kwargs)
 
 
-def research_context(root, asset, clock):
+def research_context(root, asset, clock, *, states=None):
     from research_engine.workspace import context
-    states = context(root, clock)["current_state"]
+    states = states if states is not None else context(root, clock)["current_state"]
     return {"asset_feedback": states.get(asset, {}).get("review_feedback", {}),
             "global_feedback": states.get("all", {}).get("review_feedback", {}) if asset != "all" else {}}
 
@@ -64,8 +64,8 @@ def export(root, clock):
     return snapshot
 
 
-def model(root, asset, clock):
-    research = research_context(root, asset, clock)
+def model(root, asset, clock, *, states=None):
+    research = research_context(root, asset, clock, states=states)
     result = call(root, clock, "asset_model", asset=asset, research_context=research)
     if result is None:
         return {"status": "not_configured", "asset": asset, "research_context": research, "execution_allowed": False}
@@ -75,11 +75,12 @@ def model(root, asset, clock):
 
 
 def portfolio(root, clock):
-    from research_engine.workspace import read_json, write_json
+    from research_engine.workspace import context, read_json, write_json
     snapshot = export(root, clock)
     if snapshot.get("status") == "not_configured":
         return snapshot
-    models = {asset: model(root, asset, clock) for asset in snapshot["assets"]}
+    states = context(root, clock)["current_state"]
+    models = {asset: model(root, asset, clock, states=states) for asset in snapshot["assets"]}
     result = call(root, clock, "portfolio_model", assets=models,
                   research_context={asset: model["research_context"] for asset, model in models.items()})
     if not isinstance(result, dict):

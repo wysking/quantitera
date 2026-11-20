@@ -206,7 +206,8 @@ def advance_reviews(root, clock, bundle=None):
                  "type": "review_completion", "review_id": task["id"], "producer": "daily_review_v1",
                  "assessment_sha256": signature, **result}
         added.append(append_event(root, event, clock))
-    context(root, clock)
+    if added:
+        context(root, clock)
     return {"discovered": sum(t["status"] != "pending" for t in queue), "written": len(added),
             "completed": sum(e["status"] == "reviewed" for e in added),
             "awaiting_evaluation": sum(e["status"] == "awaiting_evaluation" for e in added),

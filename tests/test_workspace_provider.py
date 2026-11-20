@@ -104,3 +104,20 @@ def test_request_receipt_replays_after_cross_platform_git_clone(tmp_path, checko
         subprocess.run(["git", *args], cwd=root, capture_output=True, check=True)
     subprocess.run(["git", "-c", f"core.autocrlf={checkout_crlf}", "clone", str(root), str(clone)], capture_output=True, check=True)
     assert process_one(clone, clone / request.relative_to(root), CLOCK) == receipt
+
+
+def test_portfolio_reuses_single_context_across_multiple_assets(tmp_path, monkeypatch):
+    import research_engine.workspace as ws
+    configured(tmp_path)
+    calls = []
+    original = ws.context
+
+    def counted(root, clock):
+        calls.append((root, clock))
+        return original(root, clock)
+
+    monkeypatch.setattr(ws, "context", counted)
+    result = integration.portfolio(tmp_path, CLOCK)
+    assert set(result["asset_models"]) == {"alpha", "beta", "unmodeled"}
+    assert len(calls) == 1
+
