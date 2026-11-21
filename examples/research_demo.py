@@ -18,10 +18,13 @@ NEXT = "2026-01-06T12:05:00+08:00"
 
 
 def cli(root, command, clock, *extra):
+    repo_root = str(Path(__file__).resolve().parents[1])
+    existing_pypath = os.environ.get("PYTHONPATH", "")
+    pypath = f"{repo_root}{os.pathsep}{existing_pypath}" if existing_pypath else repo_root
     result = subprocess.run([sys.executable, "-X", "utf8", "-m", "research_engine", command,
                              "--workspace", str(root), "--as-of", clock, *extra],
                             cwd=root if root.exists() else root.parent,
-                            env={**os.environ, "PYTHONUTF8": "1"},
+                            env={**os.environ, "PYTHONUTF8": "1", "PYTHONPATH": pypath},
                             capture_output=True, text=True, encoding="utf-8", check=True)
     return json.loads(result.stdout)
 

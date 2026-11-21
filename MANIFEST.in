@@ -1,4 +1,4 @@
-include README.md LICENSE NOTICE.md AGENTS.md CONTRIBUTING.md CHANGELOG.md provenance.json
+include README.md README.en.md demo.ipynb LICENSE NOTICE.md AGENTS.md CONTRIBUTING.md CHANGELOG.md provenance.json
 include .github/workflows/ci.yml
 graft docs
 graft examples
