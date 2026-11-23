@@ -189,10 +189,12 @@ QuantItera 采用 **「公开引擎 + 私有工作空间」** 分层架构：公
 
 ### 🤝 搭配 AI 助手 & 云端自动运行
 
-1. **AI 研究协作**：将工作空间内置协议 [AI_WORKFLOW.md](../research_engine/workspace_template/AI_WORKFLOW.md)（兼容 `CHATGPT_WORKFLOW.md`）接入 **Gemini**、**ChatGPT** 等助手，先读历史反馈再推演、归档新判断。
+1. **双轨 AI 研究协作**：
+   - **ChatGPT / Claude（GitHub 插件 / MCP）**：读取工作空间内置协议 [AI_WORKFLOW.md](../research_engine/workspace_template/AI_WORKFLOW.md)（兼容 `CHATGPT_WORKFLOW.md`），先读历史反馈再归档新判断到 `inbox/`。
+   - **Gemini 全谷歌原生桥接**：通过 `@Google Drive` 读 4 份只读镜像 Docs + `@Gmail` 写 `[QUANT-INBOX]` 草稿，由 **[Google Apps Script (`google_bridge/Code.gs`)](../google_bridge/Code.gs)** 每 5 分钟自动校验并同步至 GitHub，彻底告别第三方 MCP 断连。
 2. **GitHub Actions 无人值守**：推送至你的**私有仓库** `main` 分支，内置模板 [research.yml](../research_engine/workspace_template/.github/workflows/research.yml) 自动串行处理 `inbox/`、检查到期任务并刷新全套报告。
 
-👉 查看 [自动刷新与部署指南](automation.md)
+👉 查看 **[双轨 AI 接入与全谷歌原生桥接指南](ai-integration.md)** · [自动刷新与部署指南](automation.md)
 
 </td>
 </tr>
@@ -205,6 +207,7 @@ QuantItera 采用 **「公开引擎 + 私有工作空间」** 分层架构：公
 | 主题 | 文档 | 说明 |
 | :--- | :--- | :--- |
 | 🚀 入门上手 | [新用户使用指南](getting-started.md) | 从源码安装到搭建个人工作空间的 10 步完整教程 |
+| 🤖 AI 双轨接入 | [双轨 AI 接入与全谷歌原生桥接](ai-integration.md) · [Code.gs](../google_bridge/Code.gs) | ChatGPT (MCP) 与 Gemini (Drive/Gmail + Apps Script) 完整配置与源码 |
 | 🏗️ 架构设计 | [架构说明](architecture.md) | 核心模块职责划分与一条判断的完整生命周期 |
 | 🧪 方法体系 | [研究方法论](research-method.md) | 经济机制拆解、事前预期对照与复盘设计思路 |
 | 🔌 模型扩展 | [模型与工作空间接口](providers.md) | 接入自有模型、策略代码与存量系统的完整契约 |

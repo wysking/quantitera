@@ -2,6 +2,7 @@ include README.md README.en.md demo.ipynb LICENSE NOTICE.md AGENTS.md CONTRIBUTI
 include .github/workflows/ci.yml
 graft docs
 graft examples
+graft google_bridge
 graft tests
 global-exclude __pycache__ *.py[cod]
 

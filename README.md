@@ -41,9 +41,19 @@ python -m examples.research_demo --workspace ../quantitera-tutorial
 | **3. Validate** | 到期自动对照完整交易窗口或触发人工/AI 复盘 | 自动判定 `supported` / `refuted`，复杂机制保留证据缺口 |
 | **4. Evolve** | 每次 `discuss` 与模型调用自动注入历史反驳与教训 | 历史经验自动回流下一轮研究，同步输出研究成绩与实盘 TWR 绩效 |
 
+## 🤖 双轨 AI 助手接入方案（ChatGPT & Gemini 全谷歌原生桥接）
+
+QuantItera 原生内置两套 AI 助手接入路线，完整源码与可复制指令已随仓开源（详见 **[《双轨 AI 接入与全谷歌原生桥接指南》(docs/ai-integration.md)](docs/ai-integration.md)**）：
+
+| 路线 | 适用 AI 助手 | 读写链路 | 核心特点 |
+| :--- | :--- | :--- | :--- |
+| **方案 A：GitHub 插件 / 远程 MCP** | **ChatGPT** (Projects + Tasks)、Claude、Cursor | 直接读取 `AI_WORKFLOW.md` 与 `exports/*.json`，向 `inbox/<id>.json` 提交请求 | 配置极简，适合桌面与支持 GitHub Connector 的环境 |
+| **方案 B：全谷歌原生桥接 ⭐** | **Gemini** (Skills / Gems + Scheduled Tasks) | `@Google Drive` 读 4 份只读镜像 Docs + `@Gmail` 写 `[QUANT-INBOX]` 草稿 ⇄ **[Google Apps Script (`google_bridge/Code.gs`)](google_bridge/Code.gs)** 每 5 分钟离线 Schema 校验并同步 GitHub | **100% 谷歌第一方连接器**，彻底解决第三方 MCP 断连、7 天 OAuth 过期与后台定时任务无法落盘问题 |
+
 ## 📚 文档与示例速览
 
 - 📖 **[完整技术指南（原主页详版）](docs/overview.md)** · **[Full Technical Guide (EN)](docs/overview.en.md)**
+- 🤖 **[双轨 AI 接入与全谷歌原生桥接指南](docs/ai-integration.md)** · **[Dual-Track AI & Google Bridge Guide (EN)](docs/ai-integration.en.md)** · **[Apps Script 桥接源码 (`google_bridge/`)](google_bridge/Code.gs)**
 - 🚀 **[新用户 10 步上手指南](docs/getting-started.md)** — 初始化空白私有工作空间、接入行情与归档判断
 - 🏗️ **[系统架构说明](docs/architecture.md)** · **[研究方法论](docs/research-method.md)**
 - 🔌 **[接入个人模型 (`provider`)](docs/providers.md)** · **[GitHub Actions 自动刷新](docs/automation.md)**

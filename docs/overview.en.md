@@ -187,10 +187,12 @@ Implement `provide(workspace, clock, operation, **kwargs)` to pass asset-level a
 
 ### 🤝 Pair with AI Assistants & GitHub Actions
 
-1. **AI Assistant Collaboration**: Point **Gemini**, **ChatGPT**, or **Claude** to [AI_WORKFLOW.md](../research_engine/workspace_template/AI_WORKFLOW.md) (compatible with `CHATGPT_WORKFLOW.md`) to read historical feedback before archiving new judgements.
+1. **Dual-Track AI Collaboration**:
+   - **ChatGPT / Claude (GitHub Plugin / MCP)**: Point to [AI_WORKFLOW.md](../research_engine/workspace_template/AI_WORKFLOW.md) (compatible with `CHATGPT_WORKFLOW.md`) to read historical feedback before archiving new judgements to `inbox/`.
+   - **Gemini Google-Native Bridge**: Read 4 read-only mirror Docs via `@Google Drive` and write `[QUANT-INBOX]` drafts via `@Gmail`, synced every 5 minutes by **[Google Apps Script (`google_bridge/Code.gs`)](../google_bridge/Code.gs)** with zero remote MCP drops.
 2. **Unattended GitHub Actions**: Push your workspace to the `main` branch of a **private repository** — [research.yml](../research_engine/workspace_template/.github/workflows/research.yml) processes `inbox/`, advances due checks, and refreshes reports automatically.
 
-👉 See [Automated Refresh Guide](automation.md)
+👉 See **[Dual-Track AI Integration & Google-Native Bridge Guide](ai-integration.en.md)** · [Automated Refresh Guide](automation.md)
 
 </td>
 </tr>
@@ -203,6 +205,7 @@ Implement `provide(workspace, clock, operation, **kwargs)` to pass asset-level a
 | Topic | Document | Description |
 | :--- | :--- | :--- |
 | 🚀 Getting Started | [Getting Started Guide](getting-started.md) | 10-step walkthrough from installation to a working private workspace |
+| 🤖 AI & Google Bridge | [Dual-Track AI & Google Bridge Guide](ai-integration.en.md) · [Code.gs](../google_bridge/Code.gs) | Complete ChatGPT (MCP) & Gemini (Drive/Gmail + Apps Script) setup and source |
 | 🏗️ Architecture | [Architecture Guide](architecture.md) | Module responsibilities and the full lifecycle of a judgement |
 | 🧪 Methodology | [Research Methodology](research-method.md) | Economic mechanisms, prior expectation checks, and review design |
 | 🔌 Model Providers | [Provider Interface](providers.md) | Contract for connecting custom models, strategies, and existing ledgers |

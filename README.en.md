@@ -41,9 +41,19 @@ python -m examples.research_demo --workspace ../quantitera-tutorial
 | **3. Validate** | Automatically verify mature trading windows or queue human/AI review | Scores `supported` / `refuted` objectively while preserving evidence gaps on complex mechanisms |
 | **4. Evolve** | Inject historical refutations and lessons into every `discuss` and model run | Compounds research memory across iterations and generates dual research & live TWR reports |
 
+## 🤖 Dual-Track AI Integration (ChatGPT & Gemini Google-Native Bridge)
+
+QuantItera ships with two production-tested AI integration routes, complete with copy-ready prompts and bridge source code (see **[Dual-Track AI Integration & Google-Native Bridge Guide (docs/ai-integration.en.md)](docs/ai-integration.en.md)**):
+
+| Route | Target AI Assistant | Read / Write Pipeline | Highlight |
+| :--- | :--- | :--- | :--- |
+| **Route A: GitHub Plugin / Remote MCP** | **ChatGPT** (Projects + Tasks), Claude, Cursor | Reads `AI_WORKFLOW.md` & `exports/*.json` directly; writes structured requests to `inbox/<id>.json` | Minimal setup for desktop and GitHub-connected clients |
+| **Route B: Google-Native Bridge ⭐** | **Gemini** (Skills / Gems + Scheduled Tasks) | `@Google Drive` reads 4 read-only mirror Docs + `@Gmail` creates `[QUANT-INBOX]` drafts ⇄ **[Google Apps Script (`google_bridge/Code.gs`)](google_bridge/Code.gs)** validates schemas every 5 min and syncs with GitHub | **100% first-party Google connectors** — eliminates remote MCP drops, 7-day OAuth expiry, and background scheduled task write failures |
+
 ## 📚 Documentation & Sample Reports
 
 - 📖 **[Full Technical Guide (EN)](docs/overview.en.md)** · **[完整技术指南（中文详版）](docs/overview.md)**
+- 🤖 **[Dual-Track AI & Google Bridge Guide (EN)](docs/ai-integration.en.md)** · **[双轨 AI 接入与全谷歌原生桥接指南](docs/ai-integration.md)** · **[Apps Script Bridge Source (`google_bridge/`)](google_bridge/Code.gs)**
 - 🚀 **[10-Step Getting Started Guide](docs/getting-started.md)** — Initialize a blank private workspace, load market data, and archive judgements
 - 🏗️ **[Architecture Guide](docs/architecture.md)** · **[Research Methodology](docs/research-method.md)**
 - 🔌 **[Private Model Interface (`provider`)](docs/providers.md)** · **[Automated GitHub Actions Refresh](docs/automation.md)**
